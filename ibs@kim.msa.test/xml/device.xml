@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module id="device">
+
+	<query id='param_check_uuid' desc='디바이스 UUID 중복 체크'>
+		<value>
+SELECT * FROM DEVICE_INFO WHERE UUID = #uuid# AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='select_cctv_url' desc='CCTV URL 요청'>
+		<value>
+SELECT 
+	B.VAL cctv_url
+FROM DEVICE_INFO A
+INNER JOIN DEVICE_SETTING B ON A.UUID = B.UUID AND A.CNT_CD = B.CNT_CD 
+INNER JOIN DVT_EVT C ON A.DVT_MDL_NO = C.DVT_MDL_NO AND A.MDL_SUB_NO = C.MDL_SUB_NO AND A.CNT_CD = C.CNT_CD 
+INNER JOIN SG_SETTING_PROP D ON B.SG_SQ = D.SG_SQ AND B.CNT_CD = D.CNT_CD 
+WHERE A.CNT_CD = #CNT_CD#
+AND A.UUID = #uuid#
+AND C.MDL_TYPE1_CD = 'CCTV'
+AND D.SG_NM LIKE '%CCTV_URL%'
+		</value>
+	</query>
+	
+	<query id='select_gms_device_list1' desc='GMS 요청 디바이스 리스트1'>
+		<value>
+SELECT 
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(A.DVT_NM, '') dvt_name 
+FROM DEVICE_INFO A
+INNER JOIN DVT_EVT B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD
+LEFT OUTER JOIN GS_SECTOR C ON A.UUID = C.UUID AND A.CNT_CD = C.CNT_CD
+WHERE A.CNT_CD = #CNT_CD#
+AND C.SEC_CD IS NULL
+<dynamic type='DQ' id='floor_id' exp='EQU_NOT=ALL'>
+AND C.FLOOR_ID = #floor_id#
+</dynamic>
+<dynamic type='DQ' id='mdl_type1_code' exp='EQU_NOT=null'>
+AND B.MDL_TYPE1_CD = #mdl_type1_code#
+</dynamic>
+<dynamic type='DQ' id='mdl_type2_code' exp='EQU_NOT=null'>
+AND B.MDL_TYPE2_CD = #mdl_type2_code#
+</dynamic>
+ORDER BY A.CRT_DTIME DESC
+		</value>
+	</query>
+	
+	<query id='select_gms_device_list2' desc='GMS 요청 디바이스 리스트2'>
+		<value>
+SELECT 
+	E.UUID uuid ,
+	E.DVT_NM dvt_name
+FROM GS_SITE A
+INNER JOIN GS_DOMAIN B ON A.SITE_CD = B.SITE_CD AND A.CNT_CD = B.CNT_CD 
+INNER JOIN GS_DOMAIN_EDGE C ON B.DOMAIN_CD = C.DOMAIN_CD AND B.CNT_CD = C.CNT_CD 
+INNER JOIN EDGE D ON C.EDGE_CD = D.EDGE_CD AND C.CNT_CD = D.CNT_CD 
+INNER JOIN DEVICE_INFO E ON D.EDGE_CD = E.EDGE_CD AND D.CNT_CD = E.CNT_CD 
+INNER JOIN DVT_EVT G ON E.DVT_MDL_NO = G.DVT_MDL_NO AND E.MDL_SUB_NO = G.MDL_SUB_NO AND E.CNT_CD = G.CNT_CD
+LEFT OUTER JOIN GS_SECTOR F ON E.UUID = F.UUID AND E.CNT_CD = F.CNT_CD 
+WHERE A.CNT_CD = #CNT_CD#
+AND A.SITE_CD = #site_code#
+<dynamic type='DQ' id='mdl_type1_code' exp='EQU_NOT=null'>
+AND G.MDL_TYPE1_CD = #mdl_type1_code#
+</dynamic>
+<dynamic type='DQ' id='mdl_type2_code' exp='EQU_NOT=null'>
+AND G.MDL_TYPE2_CD = #mdl_type2_code#
+</dynamic>
+AND F.SEC_CD IS NULL
+		</value>
+	</query>
+
+	<query id='select_device_list' desc='디바이스 리스트'>
+		<value>
+SELECT 
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(A.DVT_NM, '') dvt_name ,
+	A.IS_ACT is_act ,
+	A.IS_CONN is_conn ,
+	A.IS_REG is_reg ,
+	IFNULL(X.CD, '') mdl_type1_code ,
+	IFNULL(X.CD_NM, '') mdl_type1_name ,
+	IFNULL(Y.CD, '') mdl_type2_code ,
+	IFNULL(Y.CD_NM, '') mdl_type2_name ,
+	IFNULL(DATE_FORMAT(H.SIG_TIME, '%Y-%m-%d %H:%i:%s'), '') last_evt_dtime ,
+	IFNULL(DATE_FORMAT(A.WRT_DTIME, '%Y-%m-%d %H:%i:%s'), '') wrt_dtime ,
+	IFNULL(G.FLOOR_ID, '') floor_id ,
+	IFNULL(G.FLOOR_NM, '') floor_name ,
+	IFNULL(gs.SITE_CD, '') site_code ,
+	IFNULL(gs.SITE_NM, '') site_name ,
+	IFNULL(G.DOMAIN_CD, '') domain_code ,
+	IFNULL(G.MAP_NM, '') domain_name ,
+	IFNULL(G.CS_KEY, '') domain_cs_key ,
+	IFNULL(CONCAT(gs.ADDR1, ', ', gs.ADDR2), '') addr ,
+	CASE WHEN I.EVT_CD IS NULL THEN 0 ELSE 1 END chk_event
+FROM DEVICE_INFO A
+INNER JOIN DVT_EVT B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD
+INNER JOIN IBS_CODE X ON B.MDL_TYPE1_CD = X.CD AND X.PREV_CD = 'MDL_TYPE1' AND X.CNT_CD = 'IBS1'
+INNER JOIN IBS_CODE Y ON B.MDL_TYPE2_CD = Y.CD AND Y.PREV_CD = 'MDL_TYPE2' AND Y.CNT_CD = 'IBS1'
+INNER JOIN EDGE C ON A.EDGE_CD = C.EDGE_CD AND A.CNT_CD = C.CNT_CD
+INNER JOIN GS_DOMAIN_EDGE gde ON C.EDGE_CD = gde.EDGE_CD AND C.CNT_CD = gde.CNT_CD 
+INNER JOIN GS_DOMAIN gd on gde.DOMAIN_CD = gd.DOMAIN_CD and gde.CNT_CD = gd.CNT_CD 
+INNER JOIN GS_SITE gs on gd.SITE_CD = gs.SITE_CD and gd.CNT_CD = gs.CNT_CD 
+LEFT OUTER JOIN (
+	SELECT 
+		A.UUID ,
+		A.CNT_CD ,
+		B.FLOOR_ID ,
+		B.FLOOR_NM ,
+		C.DOMAIN_CD ,
+		C.MAP_NM ,
+		C.CS_KEY 
+	FROM GS_SECTOR A
+	INNER JOIN GS_FLOOR B ON A.FLOOR_ID = B.FLOOR_ID AND A.DOMAIN_CD = B.DOMAIN_CD AND A.CNT_CD = B.CNT_CD
+	INNER JOIN GS_DOMAIN C ON A.DOMAIN_CD = C.DOMAIN_CD AND A.CNT_CD = C.CNT_CD
+	WHERE A.CNT_CD = #CNT_CD#
+) G ON A.UUID = G.UUID AND A.CNT_CD = G.CNT_CD
+LEFT OUTER JOIN (
+	SELECT
+		UUID ,
+		CNT_CD ,
+		MAX(SIG_TIME) SIG_TIME
+	FROM EVENT_HIS
+	WHERE CNT_CD = #CNT_CD#
+	GROUP BY UUID 
+) H ON A.UUID = H.UUID AND A.CNT_CD = H.CNT_CD
+LEFT OUTER JOIN (
+	SELECT
+		UUID ,
+		CNT_CD ,
+		EVT_CD
+	FROM EVT_MODEL
+	WHERE CNT_CD = #CNT_CD#
+	GROUP BY UUID
+) I ON A.UUID = I.UUID AND A.CNT_CD = I.CNT_CD
+WHERE A.CNT_CD = #CNT_CD#
+<dynamic type='DQ' id='dvt_id' exp='EQU_NOT=null'>
+AND (A.UUID LIKE #%dvt_id%# OR A.DVT_NM LIKE #%dvt_id%#)
+</dynamic>
+<dynamic type='DQ' id='mdl_type1_code' exp='EQU_NOT=null'>
+AND B.MDL_TYPE1_CD = #mdl_type1_code#
+</dynamic>
+<dynamic type='DQ' id='mdl_type2_code' exp='EQU_NOT=null'>
+AND B.MDL_TYPE2_CD = #mdl_type2_code#
+</dynamic>
+group by gs.SITE_CD, A.UUID
+ORDER BY A.CRT_DTIME DESC
+<dynamic type='DQ' id='_size' exp='EQU_NOT=-1'>
+LIMIT #_size# OFFSET #_index#
+</dynamic>
+		</value>
+	</query>
+	
+	<query id='select_device_list_cnt' desc='디바이스 리스트 갯수'>
+		<value>
+SELECT
+	COUNT(*) _total_cnt
+FROM (
+SELECT 
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(A.DVT_NM, '') dvt_name ,
+	A.IS_ACT is_act ,
+	A.IS_CONN is_conn ,
+	A.IS_REG is_reg ,
+	IFNULL(X.CD, '') mdl_type1_code ,
+	IFNULL(X.CD_NM, '') mdl_type1_name ,
+	IFNULL(Y.CD, '') mdl_type2_code ,
+	IFNULL(Y.CD_NM, '') mdl_type2_name ,
+	IFNULL(DATE_FORMAT(H.SIG_TIME, '%Y-%m-%d %H:%i:%s'), '') last_evt_dtime ,
+	IFNULL(DATE_FORMAT(A.WRT_DTIME, '%Y-%m-%d %H:%i:%s'), '') wrt_dtime ,
+	IFNULL(G.FLOOR_ID, '') floor_id ,
+	IFNULL(G.FLOOR_NM, '') floor_name ,
+	IFNULL(G.SITE_CD, '') site_code ,
+	IFNULL(G.SITE_NM, '') site_name ,
+	IFNULL(G.DOMAIN_CD, '') domain_code ,
+	IFNULL(G.MAP_NM, '') domain_name ,
+	IFNULL(G.CS_KEY, '') domain_cs_key ,
+	IFNULL(CONCAT(G.ADDR1, ', ', G.ADDR2), '') addr ,
+	CASE WHEN I.EVT_CD IS NULL THEN 0 ELSE 1 END chk_event
+FROM DEVICE_INFO A
+INNER JOIN DVT_EVT B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD
+INNER JOIN IBS_CODE X ON B.MDL_TYPE1_CD = X.CD AND X.PREV_CD = 'MDL_TYPE1' AND X.CNT_CD = 'IBS1'
+INNER JOIN IBS_CODE Y ON B.MDL_TYPE2_CD = Y.CD AND Y.PREV_CD = 'MDL_TYPE2' AND Y.CNT_CD = 'IBS1'
+INNER JOIN EDGE C ON A.EDGE_CD = C.EDGE_CD AND A.CNT_CD = C.CNT_CD
+LEFT OUTER JOIN (
+	SELECT 
+		A.UUID ,
+		A.CNT_CD ,
+		B.FLOOR_ID ,
+		B.FLOOR_NM ,
+		C.DOMAIN_CD ,
+		C.MAP_NM ,
+		C.CS_KEY ,
+		F.SITE_NM,
+		F.SITE_CD,
+		F.ADDR1 ,
+		F.ADDR2
+	FROM GS_SECTOR A
+	INNER JOIN GS_FLOOR B ON A.FLOOR_ID = B.FLOOR_ID AND A.DOMAIN_CD = B.DOMAIN_CD AND A.CNT_CD = B.CNT_CD
+	INNER JOIN GS_DOMAIN C ON A.DOMAIN_CD = C.DOMAIN_CD AND A.CNT_CD = C.CNT_CD
+	INNER JOIN GS_SITE F ON C.SITE_CD = F.SITE_CD = C.CNT_CD = F.CNT_CD
+	WHERE A.CNT_CD = 'TEST'
+) G ON A.UUID = G.UUID AND A.CNT_CD = G.CNT_CD
+LEFT OUTER JOIN (
+	SELECT
+		UUID ,
+		CNT_CD ,
+		MAX(SIG_TIME) SIG_TIME
+	FROM EVENT_HIS
+	WHERE CNT_CD = 'TEST'
+	GROUP BY UUID
+) H ON A.UUID = H.UUID AND A.CNT_CD = H.CNT_CD
+LEFT OUTER JOIN (
+	SELECT
+		UUID ,
+		CNT_CD ,
+		EVT_CD
+	FROM EVT_MODEL
+	WHERE CNT_CD = 'TEST'
+	GROUP BY UUID
+) I ON A.UUID = I.UUID AND A.CNT_CD = I.CNT_CD
+	WHERE A.CNT_CD = #CNT_CD#
+	<dynamic type='DQ' id='dvt_id' exp='EQU_NOT=null'>
+	AND (A.UUID LIKE #%dvt_id%# OR A.DVT_NM LIKE #%dvt_id%#)
+	</dynamic>
+	<dynamic type='DQ' id='mdl_type1_code' exp='EQU_NOT=null'>
+	AND B.MDL_TYPE1_CD = #mdl_type1_code#
+	</dynamic>
+	<dynamic type='DQ' id='mdl_type2_code' exp='EQU_NOT=null'>
+	AND B.MDL_TYPE2_CD = #mdl_type2_code#
+	</dynamic>
+	ORDER BY A.CRT_DTIME DESC
+) A
+		</value>
+	</query>
+	
+	<query id='deprecated_select_device_info' desc='디바이스 상세'>
+		<value>
+SELECT
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(A.DVT_NM, '') dvt_name ,
+	A.IS_REG is_reg ,
+	A.IS_ACT is_act ,
+	A.IS_CONN is_conn ,
+	IFNULL(A.LAST_SG_TYPE, '') last_sg_type ,
+	IFNULL(A.TERM_TIME, 0) term_time ,
+	CONCAT_WS(',',C.SG_VAL1,C.SG_VAL2,C.SG_VAL3,C.SG_VAL4,C.SG_VAL5,C.SG_VAL6,C.SG_VAL7,C.SG_VAL8,C.SG_VAL9,C.SG_VAL10) vals ,
+	DATE_FORMAT(A.WRT_DTIME, '%Y-%m-%d %H:%i:%s') wrt_dtime ,
+	IFNULL(B.DVT_MDL_NO, '') dvt_mdl_no ,
+	IFNULL(B.MDL_SUB_NO, '') mdl_sub_no ,
+	IFNULL(B.MDL_TYPE1_CD, '') mdl_type1_code ,
+	IFNULL(B.MDL_TYPE2_CD, '') mdl_type2_code ,
+	IFNULL(D.SG_SQ, '') sg_seq ,
+	IFNULL(D.SG_NM, '') sg_name ,
+	IFNULL(D.VAL, '') val ,
+	IFNULL(A.EDGE_CD, '') edge_code
+FROM DEVICE_INFO A
+INNER JOIN DVT_EVT B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD
+LEFT OUTER JOIN SG_CODE_BOOK C ON B.DVT_MDL_NO = C.DVT_MDL_NO AND B.MDL_SUB_NO = C.DVT_MDL_NO AND B.CNT_CD = C.CNT_CD
+LEFT OUTER JOIN (
+	SELECT
+		B.SG_SQ ,
+		B.SG_NM ,
+		A.VAL ,
+		A.UUID ,
+		A.CNT_CD
+	FROM DEVICE_SETTING A
+	INNER JOIN SG_SETTING_PROP B ON A.SG_SQ = B.SG_SQ AND A.CNT_CD = B.CNT_CD 
+	WHERE A.UUID = #uuid#
+	GROUP BY A.UUID
+) D ON A.UUID = D.UUID AND A.CNT_CD = D.CNT_CD 
+WHERE A.CNT_CD = #CNT_CD#
+AND A.UUID = #uuid#
+		</value>
+	</query>
+	
+	<query id='select_device_info' desc='디바이스 상세'>
+		<value>
+SELECT
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(A.DVT_NM, '') dvt_name ,
+	IFNULL(A.DVT_DESC, '') dvt_desc , 
+	A.IS_REG is_reg ,
+	A.IS_ACT is_act ,
+	A.IS_CONN is_conn ,
+	A.IS_USE is_use ,
+	IFNULL(A.LAST_SG_TYPE, '') last_sg_type ,
+	IFNULL(A.TERM_TIME, 0) term_time ,
+	DATE_FORMAT(A.WRT_DTIME, '%Y-%m-%d %H:%i:%s') wrt_dtime ,
+	IFNULL(B.DVT_MDL_NO, '') dvt_mdl_no ,
+	IFNULL(B.MDL_SUB_NO, '') mdl_sub_no ,
+	IFNULL(X.CD, '') mdl_type1_code ,
+	IFNULL(X.CD_NM, '') mdl_type1_name ,
+	IFNULL(Y.CD, '') mdl_type2_code ,
+	IFNULL(Y.CD_NM, '') mdl_type2_name ,
+	IFNULL(D.SG_SQ, '') sg_seq ,
+	IFNULL(D.SG_NM, '') sg_name ,
+	IFNULL(D.VAL, '') val ,
+	IFNULL(E.EDGE_CD, -1) edge_code ,
+	IFNULL(E.EDGE_NM, '') edge_name , 
+	IFNULL(I.FLOOR_ID, '') floor_id ,
+	IFNULL(I.FLOOR_NM, '') floor_name ,
+	IFNULL(I.DOMAIN_CD, '') domain_code ,
+	IFNULL(I.MAP_NM, '') domain_name ,
+	IFNULL(I.CS_KEY, '') domain_cs_key ,
+	IFNULL(I.SITE_CD, '') site_code ,
+	IFNULL(I.SITE_NM, '') site_name ,
+	IFNULL(I.X, '') x ,
+	IFNULL(I.Y, '') y ,
+	IFNULL(I.Z, '') z 
+FROM DEVICE_INFO A
+INNER JOIN DVT_EVT B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD
+INNER JOIN EDGE E ON A.EDGE_CD = E.EDGE_CD AND A.CNT_CD = E.CNT_CD 
+INNER JOIN IBS_CODE X ON B.MDL_TYPE1_CD = X.CD AND X.PREV_CD = 'MDL_TYPE1' AND X.CNT_CD = 'IBS1'
+INNER JOIN IBS_CODE Y ON B.MDL_TYPE2_CD = Y.CD AND Y.PREV_CD = 'MDL_TYPE2' AND Y.CNT_CD = 'IBS1'
+LEFT OUTER JOIN SG_CODE_BOOK C ON B.DVT_MDL_NO = C.DVT_MDL_NO AND B.MDL_SUB_NO = C.DVT_MDL_NO AND B.CNT_CD = C.CNT_CD
+LEFT OUTER JOIN (
+	SELECT
+		B.SG_SQ ,
+		B.SG_NM ,
+		A.VAL ,
+		A.UUID ,
+		A.CNT_CD
+	FROM DEVICE_SETTING A
+	INNER JOIN SG_SETTING_PROP B ON A.SG_SQ = B.SG_SQ AND A.CNT_CD = B.CNT_CD AND B.SG_NM = 'CCTV_URL'
+	WHERE A.CNT_CD = #CNT_CD#
+	AND A.UUID = #uuid#
+	GROUP BY A.UUID
+) D ON A.UUID = D.UUID AND A.CNT_CD = D.CNT_CD 
+LEFT OUTER JOIN (
+	SELECT
+		A.UUID ,
+		A.CNT_CD ,
+		A.X ,
+		A.Y ,
+		A.Z ,
+		B.FLOOR_ID ,
+		B.FLOOR_NM ,
+		C.DOMAIN_CD ,
+		C.MAP_NM ,
+		C.CS_KEY ,
+		D.SITE_CD ,
+		D.SITE_NM 
+	FROM GS_SECTOR A
+	INNER JOIN GS_FLOOR B ON A.FLOOR_ID = B.FLOOR_ID AND A.DOMAIN_CD = B.DOMAIN_CD AND A.CNT_CD = B.CNT_CD 
+	INNER JOIN GS_DOMAIN C ON A.DOMAIN_CD = C.DOMAIN_CD AND A.CNT_CD = C.CNT_CD
+	INNER JOIN GS_SITE D ON C.SITE_CD = D.SITE_CD AND C.CNT_CD = D.CNT_CD 
+	WHERE A.CNT_CD = #CNT_CD#
+	AND A.UUID = #uuid#
+) I ON A.UUID = I.UUID AND A.CNT_CD = I.CNT_CD
+WHERE A.CNT_CD = #CNT_CD#
+AND A.UUID = #uuid#
+		</value>
+	</query>
+	
+	<query id='deprecated_device_event_info' desc='디바이스 이벤트 상세 (삭제 예정)'>
+		<value>
+SELECT
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(C.EVT_CD, '') evt_code ,
+	IFNULL(C.EVT_NM, '') evt_name ,
+	GROUP_CONCAT( 
+	CONCAT(
+	CASE WHEN D.SG_VAL_NO = '1' THEN E.SG_VAL1 WHEN D.SG_VAL_NO = '2' THEN E.SG_VAL2 WHEN D.SG_VAL_NO = '3' THEN E.SG_VAL2 WHEN D.SG_VAL_NO = '4' THEN E.SG_VAL4
+	WHEN D.SG_VAL_NO = '5' THEN E.SG_VAL5 WHEN D.SG_VAL_NO = '6' THEN E.SG_VAL6 WHEN D.SG_VAL_NO = '7' THEN E.SG_VAL7 
+	WHEN D.SG_VAL_NO = '8' THEN E.SG_VAL8 WHEN D.SG_VAL_NO = '9' THEN E.SG_VAL9 WHEN D.SG_VAL_NO = '10' THEN E.SG_VAL10 END 
+	, 
+	' ',
+	CASE WHEN F.CD = 'BETWEEN' THEN CONCAT(SUBSTRING_INDEX(D.VAL, ',' 1), '이상 ', SUBSTRING_INDEX(D.END_VAL, ',', -1), ' 이하') ELSE CONCAT(D.VAL, '와 같음') END
+	)) AS evt_alarm_info 
+FROM DEVICE_INFO A
+INNER JOIN EVT_MODEL B ON A.UUID = B.UUID AND A.CNT_CD = B.CNT_CD 
+INNER JOIN EVENT C ON B.EVT_CD = C.EVT_CD AND B.CNT_CD = C.CNT_CD 
+INNER JOIN TS_CALC_NUM D ON C.EVT_CD = D.EVT_CD AND C.CNT_CD = D.CNT_CD 
+INNER JOIN SG_CODE_BOOK E ON C.SG_CD = E.SG_CD AND D.SG_CD = E.SG_CD AND C.CNT_CD = E.CNT_CD 
+INNER JOIN IBS_CODE F ON D.EVT_CALC_TYPE = F.CD
+WHERE A.CNT_CD = #CNT_CD#
+AND A.UUID = #uuid#
+GROUP BY A.UUID, C.EVT_CD
+		</value>
+	</query>
+	
+	<query id='device_event_info' desc='디바이스 이벤트 상세'>
+		<value>
+SELECT
+	IFNULL(A.UUID, '') uuid ,
+	IFNULL(C.EVT_CD, '') evt_code ,
+	IFNULL(C.EVT_NM, '') evt_name ,
+	IFNULL(C.EVT_DESC, '') evt_desc , 
+	IFNULL(X.CD, '') evt_type_code ,
+	IFNULL(X.CD_NM, '') evt_type_name ,
+	CONCAT(
+		CASE WHEN E.IS_ALARM_WEB = 1 THEN '웹알림' ELSE '' END, 
+		CASE WHEN E.IS_ALARM_WEB = 1 AND E.IS_ALARM_MOBILE = 1 THEN ',' ELSE '' END, 
+		CASE WHEN E.IS_ALARM_MOBILE = 1 THEN '모바일알림' ELSE '' END
+	) is_alarm
+	,D.SG_TYPE_CD sg_type
+	,CONCAT(
+		CASE WHEN E.IS_VIEW = 1 THEN 'YES/' ELSE 'NO/' END, 
+		CASE WHEN E.IS_WAVE = 1 THEN 'YES' ELSE 'NO' END 
+	) is_vw
+	,GROUP_CONCAT( 
+		CASE 
+			WHEN ec.EVT_CALC_TYPE = 'BETWEEN' THEN CONCAT('- ',SUBSTRING_INDEX(ec.VAL, ',', 1),' ~ ',SUBSTRING_INDEX(ec.VAL, ',', -1))
+			WHEN Z.PREV_CD = 'EVT_CALC_REF' THEN CONCAT('- ',Z.CD_NM,' [ ',ec.VAL,' ]')
+		 ELSE '-' END
+		 separator '<![CDATA[<br/>]]>'
+	 ) evt_calcs
+FROM DEVICE_INFO A
+INNER JOIN EVT_MODEL B ON A.UUID = B.UUID AND A.CNT_CD = B.CNT_CD 
+INNER JOIN EVENT C ON B.EVT_CD = C.EVT_CD AND B.CNT_CD = C.CNT_CD 
+INNER JOIN TS_CALC_NUM ec on C.EVT_CD = ec.EVT_CD AND C.CNT_CD = ec.CNT_CD 
+INNER JOIN IBS_CODE X ON C.EVT_TYPE = X.CD AND X.PREV_CD ='EVT_TYPE_CD' AND X.CNT_CD = 'IBS1'
+INNER JOIN IBS_CODE Z on ec.EVT_CALC_TYPE = Z.CD and Z.CNT_CD ='IBS1'
+INNER JOIN SG_CODE_BOOK D ON C.SG_CD = D.SG_CD AND C.CNT_CD = D.CNT_CD 
+LEFT OUTER JOIN (
+	SELECT
+		B.EVT_CD ,
+		A.CNT_CD ,
+		SUM(CASE WHEN B.OPT_CODE = 'WEB' THEN 1 ELSE 0 END) IS_ALARM_WEB ,
+		SUM(CASE WHEN B.OPT_CODE = 'MOBILE' THEN 1 ELSE 0 END) IS_ALARM_MOBILE ,
+		SUM(CASE WHEN B.OPT_CODE = 'VIEW' THEN 1 ELSE 0 END) IS_VIEW ,
+		SUM(CASE WHEN B.OPT_CODE = 'WAVE' THEN 1 ELSE 0 END) IS_WAVE
+	FROM EVT_ACT A
+	INNER JOIN EVT_ACT_SET B ON A.OPT_CODE = B.OPT_CODE AND A.CNT_CD = B.CNT_CD 
+	WHERE A.CNT_CD = #CNT_CD#
+	GROUP BY B.EVT_CD 
+) E ON C.EVT_CD = E.EVT_CD AND C.CNT_CD = E.CNT_CD
+WHERE A.CNT_CD = #CNT_CD#
+AND A.UUID = #uuid#
+GROUP BY C.EVT_CD
+ORDER BY C.EVT_CD 
+		</value>
+	</query>
+	
+	<query id='insert_device' desc='디바이스 저장'>
+		<value>
+INSERT 
+INTO DEVICE_INFO (UUID,DVT_NM,IS_REG,IS_ACT,IS_CONN,IS_USE,LAST_SG_TYPE,EVT_DESC,WTER,CNT_CD,DVT_MDL_NO,MDL_SUB_NO,EDGE_CD)
+VALUES (
+	#uuid# ,
+	#dvt_name# ,
+	#is_reg# ,
+	#is_act# ,
+	#is_conn# ,
+	#is_use# ,
+	#last_sg_type# ,
+	#evt_desc# ,
+	#USR_SEQ# ,
+	#CNT_CD# ,
+	#dvt_mdl_no# ,
+	#mdl_sub_no# ,
+	#edge_code#
+	)
+		</value>
+	</query>
+	
+	<query id='`' desc='디바이스 저장'>
+		<value>
+INSERT 
+INTO DEVICE_INFO (UUID,DVT_NM,IS_REG,IS_ACT,IS_CONN,IS_USE,DVT_DESC,WTER,CNT_CD,DVT_MDL_NO,MDL_SUB_NO,EDGE_CD)
+VALUES (
+	#uuid# ,
+	#dvt_name# ,
+	#is_reg# ,
+	#is_act# ,
+	#is_conn# ,
+	#is_use# ,
+	#dvt_desc# ,
+	#USR_SEQ# ,
+	#CNT_CD# ,
+	#dvt_mdl_no# ,
+	#mdl_sub_no# ,
+	#edge_code#
+	)
+		</value>
+	</query>
+	
+	<query id='update_device' desc='디바이스 수정'>
+		<value>
+UPDATE 
+	DEVICE_INFO
+SET 
+	DVT_NM = #dvt_name# ,
+	DVT_DESC = #dvt_desc# ,
+	IS_USE = #is_use#
+WHERE UUID = #uuid#
+AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='delete_device' desc='디바이스 삭제'>
+		<value>
+DELETE FROM DEVICE_INFO WHERE UUID = #uuid# AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+
+	<query id='insert_device_event' desc='디바이스 이벤트 등록'>
+		<value>
+INSERT INTO EVT_MODEL (WTER,CNT_CD,EVT_CD,UUID)
+VALUES (
+	#USR_SEQ# ,
+	#CNT_CD# ,
+	#evt_code# ,
+	#uuid#
+)
+		</value>
+	</query>
+	
+	<query id='update_device_event' desc='디바이스 이벤트 수정'>
+		<value>
+UPDATE
+	EVT_MODEL 
+SET
+	WRT_DTIME = now()
+WHERE CNT_CD = #CNT_CD#
+AND UUID = #uuid#
+AND EVT_CD = #evt_code#
+		</value>
+	</query>
+	
+	<query id='is_device_setting_site' desc='디바이스 현장 설치 여부'>
+		<value>
+SELECT * FROM GS_SECTOR WHERE CNT_CD = #CNT_CD# AND UUID = #uuid#
+		</value>
+	</query>
+	
+	<query id='is_device_setting_his' desc='디바이스 이벤트 발생 여부'>
+		<value>
+SELECT * FROM EVENT_HIS WHERE CNT_CD = #CNT_CD# AND UUID = #uuid#	
+		</value>
+	</query>
+	
+	<query id='delete_device_event' desc='디바이스 이벤트 삭제'>
+		<value>
+DELETE FROM EVT_MODEL 
+WHERE CNT_CD = #CNT_CD#
+AND UUID = #uuid#
+<dynamic type="DA" id="evt_code_list" exp="NULL=NO">
+AND NOT EVT_CD IN (#evt_code_list#)
+</dynamic>
+		</value>
+	</query>
+	
+	<query id='selct_model' desc='디바이스 모델'>
+		<value>
+SELECT
+	A.DVT_MDL_NO dvt_mdl_no ,
+	A.MDL_SUB_NO mdl_sub_no ,
+	B.SG_CD sg_code
+FROM DVT_EVT A
+INNER JOIN SG_CODE_BOOK B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD
+WHERE A.CNT_CD = #CNT_CD#
+AND A.DVT_MDL_NO = #dvt_mdl_no#
+		</value>
+	</query>
+	
+	<query id='select_check_signal' desc='시그널 prop 체크'>
+		<value>
+SELECT
+	SG_SQ sg_seq
+FROM SG_SETTING_PROP
+WHERE CNT_CD = #CNT_CD#
+AND SG_NM LIKE '%CCTV_URL%'
+		</value>
+	</query>
+	
+	<query id='select_signal_setting_seq' desc='시그널 세팅 시퀀스'>
+		<value>
+SELECT IFNULL(MAX(SG_SQ), 0) sg_seq FROM SG_SETTING_PROP
+		</value>
+	</query>
+	
+	<query id='insert_signal_setting_prop' desc='시그널 세팅 항목 등록'>
+		<value>
+INSERT INTO SG_SETTING_PROP (SG_SQ,SG_NM,WTER,CNT_CD,SG_CD)
+VALUES (
+	(SELECT IFNULL(MAX(SG_SQ) + 1, 0) FROM SG_SETTING_PROP A) ,
+	'CCTV_URL' ,
+	#USR_SEQ# ,
+	#CNT_CD# ,
+	#sg_code#
+)
+		</value>
+	</query>
+	
+	<query id='update_signal_setting_prop' desc='시그널 세팅 항목 수정'>
+		<value>
+UPDATE 
+	SG_SETTING_PROP
+SET
+	SG_NM = #sg_name#
+WHERE SG_SQ = #sg_seq#
+AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='delete_signal_setting_prop' desc='시그널 세팅 항목 삭제'>
+		<value>
+DELETE FROM SG_SETTING_PROP WHERE SG_SQ = (SELECT SG_SQ FROM DEVICE_SETTING WHERE UUID = #uuid# AND CNT_CD = #CNT_CD# GROUP BY UUID) AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='insert_device_setting' desc='디바이스 세팅 값 등록'>
+		<value>
+INSERT INTO DEVICE_SETTING (VAL,SG_SQ,SG_CD,CNT_CD,UUID)
+VALUES (
+	#val# ,
+	#sg_seq# ,
+	#sg_code# ,
+	#CNT_CD# ,
+	#uuid#
+)
+		</value>
+	</query>
+	
+	<query id='update_device_setting' desc='디바이스 세팅 값 수정'>
+		<value>
+UPDATE
+	DEVICE_SETTING
+SET
+	VAL = #val#
+WHERE CNT_CD = #CNT_CD#
+AND UUID = #uuid#
+AND SG_SQ = #sg_seq#
+		</value>
+	</query>
+	
+	<query id='delete_device_setting' desc='디바이스 세팅 값 삭제'>
+		<value>
+DELETE FROM DEVICE_SETTING WHERE CNT_CD = #CNT_CD# AND UUID = #uuid#
+		</value>
+	</query>
+	
+	<query id='select_signal_val' desc='디바이스 시그널 값'>
+		<value>
+SELECT	
+	SG_VAL1 val1,
+	SG_VAL2 val2,
+	SG_VAL3 val3,
+	SG_VAL4 val4,
+	SG_VAL5 val5,
+	SG_VAL6 val6,
+	SG_VAL7 val7,
+	SG_VAL8 val8,
+	SG_VAL9 val9,
+	SG_VAL10 val10
+FROM SG_CODE_BOOK
+WHERE SG_CD = #sg_code#
+AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='insert_device_now_status' desc='디바이스 현재 상태 저장'>
+		<value>
+INSERT INTO SG_DVT_CURRENT (CNT_CD, UUID) VALUES (#CNT_CD#, #uuid#)
+		</value>
+	</query>
+	
+	<query id='delete_device_now_status' desc='디바이스 현재 상태 삭제'>
+		<value>
+DELETE FROM SG_DVT_CURRENT WHERE UUID = #uuid# AND CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='select_device_event_list' desc='디바이스 이벤트 리스트'>
+		<value>
+SELECT 
+	IFNULL(D.EVT_CD, '') evt_code,
+	IFNULL(D.EVT_NM, '') evt_name
+FROM DEVICE_INFO A
+INNER JOIN DVT_EVT B ON A.DVT_MDL_NO = B.DVT_MDL_NO AND A.MDL_SUB_NO = B.MDL_SUB_NO AND A.CNT_CD = B.CNT_CD 
+INNER JOIN SG_CODE_BOOK C ON B.DVT_MDL_NO = C.DVT_MDL_NO AND B.MDL_SUB_NO = C.MDL_SUB_NO AND B.CNT_CD = C.CNT_CD 
+INNER JOIN EVENT D ON C.SG_CD = D.SG_CD AND C.CNT_CD = D.CNT_CD 
+WHERE A.UUID = #uuid#
+AND A.CNT_CD = #CNT_CD#
+		</value>
+	</query>
+	
+	<query id='edge_device_list' desc='엣지 디바이스 리스트'>
+		<value>
+SELECT 
+	UUID uuid ,
+	DVT_NM dvt_name ,
+	IS_REG is_reg ,
+	IS_ACT is_act ,
+	IS_CONN is_conn ,
+	LAST_SG_TYPE last_sg_type 
+FROM DEVICE_INFO 
+WHERE CNT_CD = #CNT_CD#
+AND EDGE_CD = #id#
+		</value>
+	</query>
+	
+</module>

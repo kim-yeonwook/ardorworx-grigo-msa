@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="edge">
+
+	<query id='select_edge_list' desc='엣지 리스트'>
+		<value>
+SELECT 
+	EDGE_CD id ,
+	EDGE_NM edge_name ,
+	EG_STAT edge_stat ,
+	AES_KEY aes_key ,
+	WIRELESS_CD wless_code
+FROM EDGE
+		</value>
+	</query>
+
+</module>
