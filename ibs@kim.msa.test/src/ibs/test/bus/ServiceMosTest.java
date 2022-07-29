@@ -27,7 +27,6 @@ public class ServiceMosTest extends ServiceMos {
 			@Override
 			public void connectionLost(Throwable cause) {
 				// TODO Auto-generated method stub
-				//@ing reconnection 및, lost되는 사유 확인 필요
 				Log.err(Modular.ID, "Mosquitto connection lost", cause);
 				while (true) {
 					try {
@@ -37,6 +36,7 @@ public class ServiceMosTest extends ServiceMos {
 					}
 					if(client.isConnected()) break;
 				}
+				System.out.println("SERVICE RECONNECTION");
 				try { if (map != null) addListern(map.list()); } catch (Exception e) {}
 			}
 
