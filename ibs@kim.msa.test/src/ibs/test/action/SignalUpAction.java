@@ -34,7 +34,8 @@ public class SignalUpAction implements ADVAction {
 				System.out.println("---------------------------------------------------------------------------------");
 				
 				System.out.println(topic);
-				System.out.println(obj.readValue(plan, HashMap.class));
+				System.out.println();
+				System.out.println(obj.writerWithDefaultPrettyPrinter().writeValueAsString(obj.readValue(plan, HashMap.class)));
 				
 				System.out.println("---------------------------------------------------------------------------------");
 				

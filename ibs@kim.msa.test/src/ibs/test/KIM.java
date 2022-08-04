@@ -1,16 +1,31 @@
 package ibs.test;
 
+import ibs.test.dto.AuthCCTVPack;
 import ibs.test.dto.EdgePack;
+import ibs.test.dto.JackSonTestPack;
 import ibs.test.edge.Edge;
+import ibs.test.task.TestTask;
 import v3.venus.mod.UriMethod;
 import v3.venus.mod._uri;
 
 public class KIM {
-	
 	
 	// RESET
 	@_uri(method=UriMethod.PUT, uri="/edge/reset")
 	public void resetEdge(EdgePack pack) throws Exception {
 		Edge.edge_list.get(pack.USR_SEQ).resetKey(pack);
 	}
+	
+	
+	// CCTV 인증?
+	@_uri(method=UriMethod.PUT, uri="/node/auth/cctv")
+	public void reqAuthCCTV(AuthCCTVPack pack) throws Exception {
+		
+	}
+	
+	@_uri(method=UriMethod.PUT, uri="/node/auth/cctv")
+	public JackSonTestPack jackSonTest(JackSonTestPack pack) throws Exception {
+		return new TestTask().jackSonTest(pack);
+	}
+	
 }

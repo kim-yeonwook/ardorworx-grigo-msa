@@ -37,7 +37,6 @@ public class KimLoader extends Modular {
 
 		xen = new Xen();
 		xen.hello(setDBPool());
-		
 		Edge.setEdge();
 		
 		super.hello();

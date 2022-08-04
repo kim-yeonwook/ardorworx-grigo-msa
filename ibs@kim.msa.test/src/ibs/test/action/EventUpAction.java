@@ -22,7 +22,8 @@ public class EventUpAction implements ADVAction {
 				System.out.println("---------------------------------------------------------------------------------");
 				
 				System.out.println(topic);
-				System.out.println(obj.readValue(body, HashMap.class));
+				System.out.println();
+				System.out.println(obj.writerWithDefaultPrettyPrinter().writeValueAsString(obj.readValue(body, HashMap.class)));
 				
 				System.out.println("---------------------------------------------------------------------------------");
 				
@@ -35,7 +36,6 @@ public class EventUpAction implements ADVAction {
 	@Override
 	public String topic() {
 		// TODO Auto-generated method stub
-		// topic 변경해야
-		return "ADV/gms/event/alarm";
+		return "ADV/event/noti";
 	}
 }
