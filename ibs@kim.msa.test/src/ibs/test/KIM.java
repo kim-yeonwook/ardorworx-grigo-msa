@@ -19,11 +19,11 @@ public class KIM {
 	
 	// CCTV 인증?
 	@_uri(method=UriMethod.PUT, uri="/node/auth/cctv")
-	public void reqAuthCCTV(AuthCCTVPack pack) throws Exception {
-		
+	public String reqAuthCCTV(AuthCCTVPack pack) throws Exception {
+		return new TestTask().reqAuthCCTV(pack);
 	}
 	
-	@_uri(method=UriMethod.PUT, uri="/node/auth/cctv")
+	@_uri(method=UriMethod.PUT, uri="/node/json/test")
 	public JackSonTestPack jackSonTest(JackSonTestPack pack) throws Exception {
 		return new TestTask().jackSonTest(pack);
 	}

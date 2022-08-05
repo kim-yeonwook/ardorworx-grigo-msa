@@ -1,8 +1,16 @@
 package ibs.test.task;
 
+import ibs.test.dto.AuthCCTVPack;
 import ibs.test.dto.JackSonTestPack;
 
 public class TestTask {
+	
+	public String reqAuthCCTV(AuthCCTVPack pack) throws Exception {
+		// 조건문 CCTV인지 아닌지 및  CCTV URL 가져오기 
+		
+		pack.setKey();
+		return pack.enc();
+	}
 
 	public JackSonTestPack jackSonTest(JackSonTestPack pack) throws Exception {
 		
