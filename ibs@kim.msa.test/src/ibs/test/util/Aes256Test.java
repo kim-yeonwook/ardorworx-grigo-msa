@@ -80,8 +80,6 @@ public class Aes256Test {
 			
 			aes.crtKey();
 			
-//			for ()
-			
 			String e = Bytes.aes256enc(Aes256Test.SECRET_KEY, new ObjectMapper().writeValueAsBytes("안녕하세요"));
 			String z = Bytes.aes256enc(Aes256Test.SECRET_KEY, new ObjectMapper().writeValueAsBytes("안녕하세요"));
 			
@@ -91,7 +89,8 @@ public class Aes256Test {
 			System.out.println(e.replace('+', '-').replace('/', '_').replace("=", ""));
 			System.out.println(z.replace('+', '-').replace('/', '_').replace("=", ""));
 			
-			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e)));
+			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e)));      
+			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('+', '-').replace('/', '_').replace("=", ""))));      
 //			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('+', '-'))));
 //			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('/', '_'))));
 			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace("=", ""))));

@@ -2,7 +2,7 @@ package ibs.test;
 
 import mecury.code.Code;
 
-public enum IbsNodeCode implements Code {
+public enum IbsKimsCode implements Code {
 
 	db_dupkey("500201",500,"Key Dup err",2),db_notkey("500202",500,"Key not found",2),db_notparent("500203",500,"parent not found",2),db_use_data("500204",500,"Data used foreign",2),db_notExist("500205",500,"Data not exist",2),db_constraint("500206",500,"Constraint Violation",2),
 	
@@ -19,12 +19,12 @@ public enum IbsNodeCode implements Code {
 	private String desc;
 	public int action = 1;
 	
-	private IbsNodeCode(String code, int state, String desc) {
+	private IbsKimsCode(String code, int state, String desc) {
 		this.state = state;
 		this.code = code;
 		this.desc = desc;
 	}
-	private IbsNodeCode(String code, int state, String desc, int action) {
+	private IbsKimsCode(String code, int state, String desc, int action) {
 		this.state = state;
 		this.code = code;
 		this.desc = desc;

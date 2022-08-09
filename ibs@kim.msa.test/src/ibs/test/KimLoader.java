@@ -85,8 +85,8 @@ public class KimLoader extends Modular {
 			if(file.isDirectory()) {
 				setDir(file.getAbsolutePath());
 			} else if(file.getName().endsWith(".class")){
-
 				String cName = file.getAbsolutePath().replace(abs+"bin"+File.separator, "").replace(abs+"classes"+File.separator, "").replace(".class", "").replace(File.separator.charAt(0), '.');
+				System.out.println(cName);
 				try {
 					Class mc = this.getClass().getClassLoader().loadClass(cName);
 					if(mc.isAnnotationPresent(_ADVBus.class)) {

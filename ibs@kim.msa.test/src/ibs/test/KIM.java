@@ -23,6 +23,7 @@ public class KIM {
 		return new TestTask().reqAuthCCTV(pack);
 	}
 	
+	
 	@_uri(method=UriMethod.PUT, uri="/node/json/test")
 	public JackSonTestPack jackSonTest(JackSonTestPack pack) throws Exception {
 		return new TestTask().jackSonTest(pack);
