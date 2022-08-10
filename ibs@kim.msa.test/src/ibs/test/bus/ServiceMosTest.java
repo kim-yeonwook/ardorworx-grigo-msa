@@ -2,6 +2,8 @@ package ibs.test.bus;
 
 import java.util.concurrent.Executors;
 
+import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -81,6 +83,7 @@ public class ServiceMosTest extends ServiceMos {
 		client.connect(option);
 		
 		addListern(this.map.list());
+		createSyncMap();
 	}
 	
 }
