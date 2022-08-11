@@ -1,6 +1,7 @@
 package ibs.test.task;
 
 import ibs.test.dto.AuthCCTVPack;
+import ibs.test.dto.DonwLinkPack;
 import ibs.test.dto.JackSonTestPack;
 
 public class TestTask {
@@ -24,5 +25,9 @@ public class TestTask {
 		pack.propertiTest2 = "properti 2 String";
 		
 		return pack;
+	}
+
+	public void downLinkTest(DonwLinkPack pack) throws Exception {
+		
 	}
 }

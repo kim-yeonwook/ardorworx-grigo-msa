@@ -1,6 +1,7 @@
 package ibs.test;
 
 import ibs.test.dto.AuthCCTVPack;
+import ibs.test.dto.DonwLinkPack;
 import ibs.test.dto.EdgePack;
 import ibs.test.dto.JackSonTestPack;
 import ibs.test.edge.Edge;
@@ -27,6 +28,12 @@ public class KIM {
 	@_uri(method=UriMethod.PUT, uri="/node/json/test")
 	public JackSonTestPack jackSonTest(JackSonTestPack pack) throws Exception {
 		return new TestTask().jackSonTest(pack);
+	}
+
+	// 다운 링크 TEST
+	@_uri(method=UriMethod.PUT, uri="/node/donwlink")
+	public void downLinkTest(DonwLinkPack pack) throws Exception {
+		new TestTask().downLinkTest(pack);
 	}
 	
 }
