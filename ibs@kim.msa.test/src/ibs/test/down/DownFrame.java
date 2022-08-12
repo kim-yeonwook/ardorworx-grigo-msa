@@ -14,9 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mecury.io.LocalProperties;
 import mecury.log.Log;
 import v3.venus.mod.Modular;
+import v3.venus.route.SvcRouter;
 
-@_Frame
-public class DownFrame implements Frame {
+public class DownFrame {
 	
 	public String broker = LocalProperties.get("edge.broker", "tcp://192.168.0.170:1883");
 	public String id = LocalProperties.get("edge.broker.id", "ardorworx");
@@ -24,77 +24,26 @@ public class DownFrame implements Frame {
 	
 	public MqttClient client;
 	
-	
-	@Override
-	public void hello() throws Exception {
-		// TODO Auto-generated method stub
-		
-		client = new MqttClient(broker, MqttClient.generateClientId(), new MemoryPersistence());
-		
-		client.setCallback(new MqttCallback() {
-			@Override
-			public void messageArrived(String topic, MqttMessage message) throws Exception {
-				// TODO Auto-generated method stub
-				
-				Log.debug(Modular.ID, topic);
-				Log.debug(Modular.ID, message);
-				
-				try {
-					
-					
-					
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-				
-			}
-
-			@Override
-			public void connectionLost(Throwable arg0) {
-				Log.err(Modular.ID, "Mosquitto connection lost", arg0);
-			}
-
-			@Override
-			public void deliveryComplete(IMqttDeliveryToken arg0) {
-				System.out.println("MESSEGE SEND SUCCESS");
-			}
-
-		});
-
-		MqttConnectOptions option = new MqttConnectOptions();
-		option.setKeepAliveInterval(30);
-		option.setCleanSession(true);
-		option.setUserName(id);
-		option.setPassword(pass.toCharArray());
-		client.connect(option);
-		
+	public DownFrame() {
+		try {
+			client = new MqttClient(broker, MqttClient.generateClientId(), new MemoryPersistence());
+			
+			MqttConnectOptions option = new MqttConnectOptions();
+			option.setKeepAliveInterval(30);
+			option.setCleanSession(true);
+			option.setUserName(id);
+			option.setPassword(pass.toCharArray());
+			
+			client.connect(option);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	@Override
-	public void bye() throws Exception {
-		// TODO Auto-generated method stub
-		client.close();
-	}
-	
-	@Override
-	public void addListern(String[] arg0) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void discardListern(String[] arg0) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-	
 
-	@Override
 	public void pub(String topic, byte[] msg) throws Exception {
 		// TODO Auto-generated method stub
 		MqttMessage message = new MqttMessage(msg);
 		client.publish(topic, message);
-
 	}
 
 	public void pub(String topic, HashMap<String,Object> msg) throws Exception {
@@ -104,8 +53,9 @@ public class DownFrame implements Frame {
 
 	}
 
-	public void close() throws Exception {
-		client.close();
+	public void close() {
+		try { client.disconnect(); } catch (Exception e) { e.printStackTrace(); }
+		System.out.println(client.isConnected());
 	}
 	
 }

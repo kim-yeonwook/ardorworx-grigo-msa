@@ -48,10 +48,8 @@ public class TestTask {
 		things.encode();
 		
 		DownFrame frame = new DownFrame();
-		frame.hello();
-		
 		frame.pub("application/" + pack.app_id + "/device/" + gen.eui + "/command/down", things.down());
-		
+	
 		frame.close();
 	}
 }
