@@ -52,15 +52,6 @@ public class DownFrame implements Frame {
 			@Override
 			public void connectionLost(Throwable arg0) {
 				Log.err(Modular.ID, "Mosquitto connection lost", arg0);
-				while (true) {
-					try {
-						client.reconnect();
-					} catch (Exception e) {
-						try { Thread.sleep(1000); } catch (Exception e2) {}
-					}
-					if(client.isConnected()) break;
-				}
-				System.out.println("CLIENT RECONNECTED");
 			}
 
 			@Override
@@ -112,4 +103,9 @@ public class DownFrame implements Frame {
 		client.publish(topic, message);
 
 	}
+
+	public void close() throws Exception {
+		client.close();
+	}
+	
 }
