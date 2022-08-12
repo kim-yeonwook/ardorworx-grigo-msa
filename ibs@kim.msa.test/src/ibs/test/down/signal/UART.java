@@ -1,5 +1,11 @@
 package ibs.test.down.signal;
 
-public class UART {
-	
+import ibs.test.down.Things;
+
+public class UART extends Things {
+	@Override
+	public byte[] encode_value(byte[] value) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

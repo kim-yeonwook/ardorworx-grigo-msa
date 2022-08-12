@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ibs.test.down.DownFrame;
 import ibs.test.down.Things;
+import ibs.test.down.ThingsMap;
 import ibs.test.down.signal.RS485;
 import ibs.test.dto.AuthCCTVPack;
 import ibs.test.dto.DonwLinkPack;
@@ -42,7 +43,9 @@ public class TestTask {
 		
 		EUIGen gen = new EUIGen().gen2Serial(pack.uuid);
 		
-		Things things = obj.readValue(obj.writeValueAsBytes(pack.data), RS485.class);
+		ThingsMap map = new ThingsMap();
+		
+		Things things = obj.readValue(obj.writeValueAsBytes(pack.data), map.get(gen.toCode()));
 		things.interface_type = Integer.parseInt(gen.dtype1);
 		things.sensor_number = Integer.parseInt(gen.dtype2);
 		things.encode();
