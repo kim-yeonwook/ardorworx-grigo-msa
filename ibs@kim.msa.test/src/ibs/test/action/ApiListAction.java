@@ -1,53 +1,67 @@
 package ibs.test.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ibs.test.edge.Edge;
-import mecury.io.Bytes;
+import ibs.test.util.ApiMap;
 import mecury.log.Log;
 import v3.venus.mod.Modular;
 import v3.venus.route.ADVAction;
-import v3.venus.route.AdvertizedBus.Callback;
 import v3.venus.route._ADVAction;
+import v3.venus.route.AdvertizedBus.Callback;
 
 @_ADVAction
-public class SignalJoinAction implements ADVAction {
-	
+public class ApiListAction implements ADVAction {
+
 	@Override
 	public Callback action() {
-		
+		// TODO Auto-generated method stub
 		return (topic, body) -> {
 			try {
 				ObjectMapper obj = new ObjectMapper();
 				obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				
+
 				HashMap<String, Object> map = obj.readValue(body, HashMap.class);
-				String MSG = (String)map.get("MSG");
-				int seed = Bytes.int2hex(MSG.substring(MSG.length()-2));
-				MSG = MSG.substring(0,MSG.length()-2).replace('-', '+').replace('_', '/');
-				byte[] plan = Bytes.aes256dec(Edge.edge_list.get((String)map.get("USR_SEQ")).key(seed), MSG);
+				
+				ArrayList<String> apiList = (ArrayList<String>)map.get("list");
+				if (apiList != null) {
+					for (int index = 0; index < apiList.size(); index++) {
+						if(!ApiMap.apiList.contains(apiList.get(index))) ApiMap.apiList.add(apiList.get(index));
+					}
+				}
+				
+				ArrayList<String> depList = (ArrayList<String>)map.get("deprecated");
+				if (depList != null) {
+					for (int index = 0; index < depList.size(); index++) {
+						if(!ApiMap.depList.contains(depList.get(index))) ApiMap.depList.add(depList.get(index));
+					}
+				}
 				
 				System.out.println();
 				System.out.println("---------------------------------------------------------------------------------");
 				
 				System.out.println(topic);
 				System.out.println();
-				System.out.println(obj.writerWithDefaultPrettyPrinter().writeValueAsString(obj.readValue(plan, HashMap.class)));
+				System.out.println("API LIST : " + ApiMap.apiList);
+				System.out.println("DEP LIST : " + ApiMap.depList);
 				
 				System.out.println("---------------------------------------------------------------------------------");
 				
 				
+				
 			} catch (Exception e) {
-				Log.err(Modular.ID, "SIGNAL JOIN ACTION ERR", e);
+				Log.err(Modular.ID, "API LIST ACTION ERR", e);
 			}
 		};
 	}
 	
 	@Override
 	public String topic() {
-		return "ADV/edge/device/join";
+		// TODO Auto-generated method stub
+		return "ADV/api/lists";
 	}
+	
 }

@@ -17,5 +17,7 @@
 	<classpathentry kind="lib" path="lib/venus.v3.bootloader-1.00.jar"/>
 	<classpathentry kind="lib" path="lib/venus.v3.msa-1.00.jar"/>
 	<classpathentry kind="lib" path="lib/xery.mecury.v1.00.jar"/>
+	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
+	<classpathentry kind="lib" path="lib/venus.v3.apiproxy-1.00.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

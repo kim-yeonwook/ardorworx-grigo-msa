@@ -14,6 +14,7 @@ import v3.venus.route.AdvertizedMos;
 
 public class AdvertizedMosTest extends AdvertizedMos {
 	
+	public boolean shutdown;
 	
 	@Override
 	public void hello() throws Exception {
@@ -25,16 +26,18 @@ public class AdvertizedMosTest extends AdvertizedMos {
 			public void connectionLost(Throwable cause) {
 				// TODO Auto-generated method stub
 				Log.err(Modular.ID, "Mosquitto connection lost", cause);
-				while (true) {
-					try {
-						client.reconnect();
-					} catch (Exception e) {
-						try { Thread.sleep(1000); } catch (Exception e2) {}
+				if (!shutdown) {
+					while (true) {
+						try {
+							client.reconnect();
+						} catch (Exception e) {
+							try { Thread.sleep(1000); } catch (Exception e2) {}
+						}
+						if(client.isConnected()) break;
 					}
-					if(client.isConnected()) break;
+					System.out.println("ADVERTIZED RECONNECTION");
+					try { if (topics != null) addListern(listerner.keySet().toArray(new String[listerner.size()])); } catch (Exception e) {}
 				}
-				System.out.println("ADVERTIZED RECONNECTION");
-				try { if (topics != null) addListern(listerner.keySet().toArray(new String[listerner.size()])); } catch (Exception e) {}
 			}
 
 			@Override
@@ -67,6 +70,12 @@ public class AdvertizedMosTest extends AdvertizedMos {
 		client.connect(option);
 		
 		this.addListern(topics);
+	}
+	
+	@Override
+	public void bye() {
+		this.shutdown = true;
+		super.bye();
 	}
 	
 //	@Override

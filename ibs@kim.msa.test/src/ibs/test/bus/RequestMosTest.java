@@ -15,6 +15,8 @@ import v3.venus.mod.Modular;
 import v3.venus.route.RequestMos;
 
 public class RequestMosTest extends RequestMos {
+	
+	public boolean shutdown;
 
 	@Override
 	public void hello() throws Exception {
@@ -40,16 +42,18 @@ public class RequestMosTest extends RequestMos {
 			public void connectionLost(Throwable cause) {
 				// TODO Auto-generated method stub
 				Log.err(Modular.ID, "Mosquitto connection lost", cause);
-				while (true) {
-					try {
-						client.reconnect();
-					} catch (Exception e) {
-						try { Thread.sleep(1000); } catch (Exception e2) {}
+				if (!shutdown) {
+					while (true) {
+						try {
+							client.reconnect();
+						} catch (Exception e) {
+							try { Thread.sleep(1000); } catch (Exception e2) {}
+						}
+						if(client.isConnected()) break;
 					}
-					if(client.isConnected()) break;
+					System.out.println("REQUEST RECONNECTION");
+					try { if (map != null) addListern(map.list()); } catch (Exception e) {}
 				}
-				System.out.println("REQUEST RECONNECTION");
-				try { if (map != null) addListern(map.list()); } catch (Exception e) {}
 			}
 
 
@@ -73,6 +77,13 @@ public class RequestMosTest extends RequestMos {
 		client.connect(option);
 	
 		addListern(this.map.list());
+	}
+	
+	@Override
+	public void bye() {
+		// TODO Auto-generated method stub
+		this.shutdown = true;
+		super.bye();
 	}
 	
 }

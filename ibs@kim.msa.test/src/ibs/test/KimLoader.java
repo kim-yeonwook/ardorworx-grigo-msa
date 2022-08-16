@@ -8,6 +8,7 @@ import ibs.test.bus.AdvertizedMosTest;
 import ibs.test.bus.RequestMosTest;
 import ibs.test.bus.ServiceMosTest;
 import ibs.test.edge.Edge;
+import ibs.test.util.ApiMap;
 import mecury.io.LocalProperties;
 import v3.venus.mod.Modular;
 import v3.venus.route.ADVAction;
@@ -31,6 +32,8 @@ import xen.mecury.XenContext;
 public class KimLoader extends Modular {
 
 	protected Xen xen;
+	
+	public ApiMap apiMap;
 
 	@Override
 	public void hello() throws Exception {
@@ -38,6 +41,8 @@ public class KimLoader extends Modular {
 		xen = new Xen();
 		xen.hello(setDBPool());
 		Edge.setEdge();
+		
+		apiMap = new ApiMap();
 		
 		super.hello();
 		
@@ -86,7 +91,6 @@ public class KimLoader extends Modular {
 				setDir(file.getAbsolutePath());
 			} else if(file.getName().endsWith(".class")){
 				String cName = file.getAbsolutePath().replace(abs+"bin"+File.separator, "").replace(abs+"classes"+File.separator, "").replace(".class", "").replace(File.separator.charAt(0), '.');
-				System.out.println(cName);
 				try {
 					Class mc = this.getClass().getClassLoader().loadClass(cName);
 					if(mc.isAnnotationPresent(_ADVBus.class)) {

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ibs.test.KIM;
 import ibs.test.edge.Edge;
 import mecury.io.Bytes;
+import mecury.log.Log;
+import v3.venus.mod.Modular;
 import v3.venus.route.ADVAction;
 import v3.venus.route.AdvertizedBus.Callback;
 import v3.venus.route._ADVAction;
@@ -40,7 +42,7 @@ public class SignalUpAction implements ADVAction {
 				System.out.println("---------------------------------------------------------------------------------");
 				
 			}catch(Exception e) {
-				e.printStackTrace();
+				Log.err(Modular.ID, "SIGNAL UP ACTION ERR", e);
 			}
 		};
 	}

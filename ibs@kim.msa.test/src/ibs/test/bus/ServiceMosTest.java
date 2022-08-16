@@ -18,6 +18,8 @@ import v3.venus.route.ServiceMos;
 
 public class ServiceMosTest extends ServiceMos {
 	
+	public boolean shutdown;
+	
 	@Override
 	public void hello() throws Exception {
 	
@@ -30,16 +32,18 @@ public class ServiceMosTest extends ServiceMos {
 			public void connectionLost(Throwable cause) {
 				// TODO Auto-generated method stub
 				Log.err(Modular.ID, "Mosquitto connection lost", cause);
-				while (true) {
-					try {
-						client.reconnect();
-					} catch (Exception e) {
-						try { Thread.sleep(1000); } catch (Exception e2) {}
+				if (!shutdown) {
+					while (true) {
+						try {
+							client.reconnect();
+						} catch (Exception e) {
+							try { Thread.sleep(1000); } catch (Exception e2) {}
+						}
+						if(client.isConnected()) break;
 					}
-					if(client.isConnected()) break;
+					System.out.println("SERVICE RECONNECTION");
+					try { if (map != null) addListern(map.list()); } catch (Exception e) {}
 				}
-				System.out.println("SERVICE RECONNECTION");
-				try { if (map != null) addListern(map.list()); } catch (Exception e) {}
 			}
 
 			@Override
@@ -84,6 +88,13 @@ public class ServiceMosTest extends ServiceMos {
 		
 		addListern(this.map.list());
 		createSyncMap();
+	}
+	
+	@Override
+	public void bye() {
+		// TODO Auto-generated method stub
+		this.shutdown = true;
+		super.bye();
 	}
 	
 }
