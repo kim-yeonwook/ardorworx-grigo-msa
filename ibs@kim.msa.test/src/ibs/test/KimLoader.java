@@ -79,7 +79,6 @@ public class KimLoader extends Modular {
 	}
 	
 	
-	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void setDir(String path) throws Exception {

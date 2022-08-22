@@ -1,5 +1,7 @@
 package ibs.test.task;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ibs.test.down.DownFrame;
@@ -8,6 +10,7 @@ import ibs.test.down.ThingsMap;
 import ibs.test.dto.AuthCCTVPack;
 import ibs.test.dto.DonwLinkPack;
 import ibs.test.dto.JackSonTestPack;
+import ibs.test.mail.GmailSend;
 import ibs.test.util.EUIGen;
 
 public class TestTask {
@@ -49,5 +52,13 @@ public class TestTask {
 		frame.pub("application/" + pack.app_id + "/device/" + gen.eui + "/command/down", things.down());
 	
 		frame.close();
+	}
+	
+	public void smtpTest(DonwLinkPack pack) throws Exception {
+		GmailSend g = new GmailSend();
+		
+		ArrayList<String> e_mail = new ArrayList<String>();
+		e_mail.add("dsudnr96@naver.com");
+		g.send(e_mail, "타이틀", "메세지");
 	}
 }
