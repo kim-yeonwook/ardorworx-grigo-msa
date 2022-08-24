@@ -39,6 +39,13 @@ public class KIM {
 	public void downLinkTest(DonwLinkPack pack) throws Exception {
 		new TestTask().downLinkTest(pack);
 	}
+
+	@_uri(method=UriMethod.PUT, uri="/node/smtp")
+	public void smtpTest(DonwLinkPack pack) throws Exception {
+		new TestTask().smtpTest(pack);
+	}
+	
+	
 	
 	// 다운 링크 TEST
 		@_uri(method=UriMethod.PUT, uri="/node/donwlink22222")

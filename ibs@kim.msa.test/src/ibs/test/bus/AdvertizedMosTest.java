@@ -19,6 +19,7 @@ public class AdvertizedMosTest extends AdvertizedMos {
 	@Override
 	public void hello() throws Exception {
 		
+		System.out.println(MqttClient.generateClientId());
 		client = new MqttClient(broker, MqttClient.generateClientId(), new MemoryPersistence());
 		client.setCallback(new MqttCallback() {
 

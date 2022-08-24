@@ -1,4 +1,4 @@
-package ibs.test;
+package ibs.test.eam;
 
 import java.util.Random;
 
