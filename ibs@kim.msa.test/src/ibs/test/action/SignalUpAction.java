@@ -50,7 +50,7 @@ public class SignalUpAction implements ADVAction {
 	@Override
 	public String topic() {
 		// TODO Auto-generated method stub
-		return "ADV/edge/signal/up1";
+		return "ADV/edge/signal/up";
 	}
 
 }

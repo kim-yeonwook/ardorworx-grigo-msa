@@ -1,4 +1,4 @@
-package ibs.test.bus;
+package ibs.test.plc;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,18 +7,38 @@ import java.net.Socket;
 import ibs.test.util.BytesTest;
 
 public class _test_PLCTEST {
-	String add = "192.168.1.80";
+	
+	String add = "192.168.0.80";
 	
 	public final static int MBAP_SIZE = 7;
 	
+	//////////////////////////////////////////////
+	// MBAP
+	//
+	
+	// 2 byte
 	public int transaction_id;
 	
+	// 2 byte
 	public int protocol_id;
 	
+	// 2 byte
 	public int length;
 	
+	// 1 byte
 	public int unit_id;
 	
+	//
+	//
+	/////////////////////////////////////////////
+	
+	// 시작 메모리는 0으로 시작하지 않음 (1 ~ 9999, 10001 ~ 19999, 30001 ~ 40001, 40001 ~ 49999)
+	// 0으로 지정하면 메모리는 1로잡힘 (예 : start_address를 50으로 지정하면 메모리는 51로 잡힘)
+	public int start_address;
+	
+	public int end_address;
+	
+	// 
 	public int function_code;
 
 	public Socket _so;
@@ -27,7 +47,7 @@ public class _test_PLCTEST {
 	
 	public _test_PLCTEST() {
 		try {
-			_so = new Socket("192.168.1.80", 502);
+			_so = new Socket("192.168.0.80", 502);
 			_in = new DataInputStream(_so.getInputStream());
 			_out = new DataOutputStream(_so.getOutputStream());
 			
@@ -165,34 +185,11 @@ public class _test_PLCTEST {
 	
 	public void inPLC() throws Exception {
 		
-//		byte[] header = new byte[8];
-//		
-//			int i = 0;
-//			do {
-//				i += _in.read(header,i,8-i);
-//			}while(i<8);
-//		
-//		System.out.println(BytesTest.byte2HexPad(header));
-//		
-//		for (int index=0; index< 10; index++) {
 		byte[] _res = new byte[50];
 			_in.read(_res);
 			
 			System.out.println(BytesTest.byte2HexPad(_res));
-			
-//		}
 		
-	}
-	
-	public byte[] isEndian(byte[] payload) throws Exception {
-		byte[] result = new byte[payload.length];
-		
-		for (int index = 0; index < payload.length; index += 2) {
-			result[index] = payload[payload.length - index - 2];
-			result[index + 1] = payload[payload.length- index - 1];
-		}
-		
-		return result;
 	}
 	
 	
@@ -201,19 +198,12 @@ public class _test_PLCTEST {
 			try {
 				_test_PLCTEST test = new _test_PLCTEST();
 				
-//				System.out.println(BytesTest.byte2HexPad(test.readValue()));
-				
 				System.out.println(BytesTest.byte2HexPad(test.writeValue()));
 //				System.out.println(BytesTest.byte2HexPad(test.readValue()));
-//				System.out.println(BytesTest.byte2HexPad(BytesTest.chgEndian(test.writeValue())));
 				
-//				test.outPLC(BytesTest.chgEndian(test.writeValue()));
-//				test.outPLC(test.isEndian(test.readValue()));
-//				test.outPLC(test.readValue());
-				test.outPLC(test.writeValue());
+				test.outPLC(test.readValue());
+//				test.outPLC(test.writeValue());
 				test.inPLC();
-				
-				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
