@@ -31,6 +31,8 @@ public abstract class MBPLC {
 	public final static int READ = 99;
 	public final static int WRITE = 100;
 	
+	public static final int MEM_LENGTH = 2;
+	
 	public int status;
 
 	// 2 byte
@@ -40,7 +42,7 @@ public abstract class MBPLC {
 	public byte[] protocol_id = {0x00, 0x00};
 
 	// 2 byte
-	public int length;
+	public byte[] length;
 
 	// TCP 통신 0x01로 고정
 	public byte unit_id = 0x01;

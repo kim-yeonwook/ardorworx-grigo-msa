@@ -24,6 +24,7 @@ public class SOPResult {
 
 	public String close_comment;
 	public HashMap<String,Object> result;
+//	public HashMap<String, SOPAction> result;
 	
 	
 	//정상 처리후 근거처리 

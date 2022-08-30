@@ -1,6 +1,7 @@
 package ibs.test.sop;
 
 import java.util.HashMap;
+import java.util.List;
 
 import ibs.test.sop.view.NoResultView;
 
@@ -22,6 +23,8 @@ public class SOPBlock {
 	
 	public String sopCode;
 	public String blcokCode;
+	
+	public List<SOPAction> action_list;
 	
 	
 	//종료처리 사유 
