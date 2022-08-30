@@ -2,7 +2,7 @@ package ibs.test.plc;
 
 import java.util.HashMap;
 
-public class SignalMap {
+public class PMap {
 	
 	private static final HashMap<String, Class<? extends MBPLC>> signal_map= new HashMap<String, Class<? extends MBPLC>>();
 	

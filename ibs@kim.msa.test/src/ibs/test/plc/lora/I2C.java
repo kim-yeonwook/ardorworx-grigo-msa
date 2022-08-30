@@ -1,10 +1,18 @@
 package ibs.test.plc.lora;
 
-import ibs.test.plc.MBPLC;
-import ibs.test.plc._SIG;
+import java.util.HashMap;
 
-@_SIG(comm_code="I2C")
+import ibs.test.plc.MBPLC;
+import ibs.test.plc._PLC;
+
+@_PLC(comm_code="I2C")
 public class I2C extends MBPLC {
+	
+	@Override
+	public void setParams(HashMap<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	@Override
 	public byte[] setReq() {

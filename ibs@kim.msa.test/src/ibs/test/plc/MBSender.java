@@ -35,7 +35,7 @@ public class MBSender {
 		public static void main(String[] args) {
 			try {
 				
-				MBPLC plc = SignalMap.get("").newInstance();
+				MBPLC plc = PMap.get("DI").newInstance();
 				
 				MBSender con = new MBSender();
 				con.set();

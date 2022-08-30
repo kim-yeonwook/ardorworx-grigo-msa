@@ -8,6 +8,8 @@ import ibs.test.bus.AdvertizedMosTest;
 import ibs.test.bus.RequestMosTest;
 import ibs.test.bus.ServiceMosTest;
 import ibs.test.edge.Edge;
+import ibs.test.plc.PMap;
+import ibs.test.plc._PLC;
 import ibs.test.util.ApiMap;
 import mecury.io.LocalProperties;
 import v3.venus.mod.Modular;
@@ -108,6 +110,9 @@ public class KimLoader extends Modular {
 						ADVAction action = (ADVAction)mc.newInstance();
 						advAction.put(action.topic(), action.action());
 						
+					} else if(mc.isAnnotationPresent(_PLC.class)) {
+						String comm_code = ((_PLC)mc.getAnnotation(_PLC.class)).comm_code();
+						PMap.put(comm_code, mc);
 					}
 					
 					tasks.regTask(mc);

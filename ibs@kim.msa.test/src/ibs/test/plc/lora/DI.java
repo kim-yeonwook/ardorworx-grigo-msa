@@ -1,10 +1,18 @@
 package ibs.test.plc.lora;
 
-import ibs.test.plc.MBPLC;
-import ibs.test.plc._SIG;
+import java.util.HashMap;
 
-@_SIG(comm_code="DI")
+import ibs.test.plc.MBPLC;
+import ibs.test.plc._PLC;
+
+@_PLC(comm_code="DI")
 public class DI extends MBPLC {
+	
+	@Override
+	public void setParams(HashMap<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	@Override
 	public byte[] setReq() {

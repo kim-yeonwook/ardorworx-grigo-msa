@@ -2,6 +2,7 @@ package ibs.test.plc;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.HashMap;
 
 import ibs.test.util.BytesTest;
 
@@ -36,10 +37,10 @@ public abstract class MBPLC {
 	public int status;
 
 	// 2 byte
-	public byte[] transaction_id = {0x00, 0x00};
+	public static final byte[] TRANSACTION = {0x00, 0x00};
 
 	// MODBUS-TCP는 0x0000
-	public byte[] protocol_id = {0x00, 0x00};
+	public static final byte[] PROTOCOL = {0x00, 0x00};
 
 	// 2 byte
 	public byte[] length;
@@ -55,7 +56,8 @@ public abstract class MBPLC {
 	public int start_address;
 
 	public int end_address;
-
+	
+	public abstract void setParams(HashMap<String, Object> params);
 	
 	public abstract byte[] setReq();
 	
