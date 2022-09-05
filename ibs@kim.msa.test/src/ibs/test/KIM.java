@@ -2,15 +2,19 @@ package ibs.test;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ibs.test.dto.AuthCCTVPack;
 import ibs.test.dto.DonwLinkPack;
 import ibs.test.dto.EdgePack;
 import ibs.test.dto.IbsPack;
 import ibs.test.dto.JackSonTestPack;
+import ibs.test.dto.LoRaDevicePack;
 import ibs.test.edge.Edge;
 import ibs.test.task.TestTask;
 import v3.venus.mod.UriMethod;
 import v3.venus.mod._uri;
+import v3.venus.route.ADVRouter;
 import v3.venus.route.SvcRouter;
 
 public class KIM {
@@ -37,14 +41,21 @@ public class KIM {
 	public void downLinkTest(DonwLinkPack pack) throws Exception {
 		new TestTask().downLinkTest(pack);
 	}
+	
+	// 디바이스 저장 (Chirpstack-Server)
+	@_uri(method=UriMethod.PUT, uri="/node/lora")
+	public void InsertLoRaDeviceIntoCS(LoRaDevicePack pack) throws Exception {
+		new TestTask().InsertLoRaDeviceIntoCS(pack);
+		ADVRouter.pub("ADV/LORA/DEVICE", new ObjectMapper().writeValueAsBytes(pack));
+	}
 
-	// smtp test
+	// SMTP TEST
 	@_uri(method=UriMethod.PUT, uri="/node/smtp")
 	public void smtpTest(DonwLinkPack pack) throws Exception {
 		new TestTask().smtpTest(pack);
 	}
 
-	// service bus test
+	// SERVICE BUS TEST
 	@_uri(method=UriMethod.PUT, uri="/node/service_bus")
 	public void downLinkTes22t(IbsPack pack) throws Exception {
 		System.out.println("AFSASFASDASDASDASD");

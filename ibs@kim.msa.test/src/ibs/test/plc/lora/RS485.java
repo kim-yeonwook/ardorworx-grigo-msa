@@ -11,6 +11,9 @@ public class RS485 extends MBPLC {
 
 	private static final int RS485_SIZE = 16;
 	
+	public String serial_no;
+	public String comm_code;
+	
 	private short val1;
 	private short val2;
 	private short val3;
@@ -21,7 +24,7 @@ public class RS485 extends MBPLC {
 	private short val8;
 	
 	@Override
-	public void setParams(HashMap<String, Object> params) {
+	public void setSignal(HashMap<String, Object> params) {
 		// TODO Auto-generated method stub
 		this.val1 = (short)params.get("val1");
 		this.val2 = (short)params.get("val2");
@@ -39,17 +42,15 @@ public class RS485 extends MBPLC {
 		byte[] _req = new byte[MBAP_SIZE + RS485_SIZE];
 		int index = 0;
 
-		System.arraycopy(TRANSACTION, 0, _req, index, 2);
-		index += 2;
+		System.arraycopy(TRANSACTION, 0, _req, index, BytesTest.SHORT_BYTE);
+		index += BytesTest.SHORT_BYTE;
 		
-		System.arraycopy(PROTOCOL, 0, _req, index, 2);
-		index += 2;
+		System.arraycopy(PROTOCOL, 0, _req, index, BytesTest.SHORT_BYTE);
+		index += BytesTest.SHORT_BYTE;
 		
-		int length = MEM_LENGTH + RS485_SIZE;
-		byte[] leng = new byte[2];
-		
-		System.arraycopy(leng, 0, _req, index, 2);
-		index += 2;
+		byte[] leng = setLength();
+		System.arraycopy(leng, 0, _req, index, BytesTest.SHORT_BYTE);
+		index += BytesTest.SHORT_BYTE;
 		
 		System.arraycopy(unit_id, 0, _req, index, 1);
 		index++;
@@ -98,8 +99,16 @@ public class RS485 extends MBPLC {
 		System.arraycopy(val8, 0, _req, index, BytesTest.SHORT_BYTE);
 		index += BytesTest.SHORT_BYTE;
 		
-		
-		
 		return _req;
+	}
+	
+	protected byte[] setLength() {
+		int leng = MEM_LENGTH + RS485_SIZE; 
+		byte[] length = new byte[BytesTest.SHORT_BYTE];
+		int size = length.length;
+		for (int index = 0; index < size; index++) {
+			length[size-(index+1)] = (byte)((leng>>8*index)&0xff);
+		}
+		return length;
 	}
 }

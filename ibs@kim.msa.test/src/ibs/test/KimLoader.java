@@ -10,6 +10,8 @@ import ibs.test.bus.ServiceMosTest;
 import ibs.test.edge.Edge;
 import ibs.test.plc.PMap;
 import ibs.test.plc._PLC;
+import ibs.test.signal.SignalMap;
+import ibs.test.signal._SIG;
 import ibs.test.util.ApiMap;
 import mecury.io.LocalProperties;
 import v3.venus.mod.Modular;
@@ -113,6 +115,9 @@ public class KimLoader extends Modular {
 					} else if(mc.isAnnotationPresent(_PLC.class)) {
 						String comm_code = ((_PLC)mc.getAnnotation(_PLC.class)).comm_code();
 						PMap.put(comm_code, mc);
+					} else if(mc.isAnnotationPresent(_SIG.class)) {
+						String comm_code = ((_SIG)mc.getAnnotation(_SIG.class)).comm_code();
+						SignalMap.put(comm_code, mc);
 					}
 					
 					tasks.regTask(mc);

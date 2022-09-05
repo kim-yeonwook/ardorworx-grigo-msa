@@ -8,8 +8,13 @@ import ibs.test.plc._PLC;
 @_PLC(comm_code="ADC")
 public class ADC extends MBPLC {
 	
+	public String serial_no;
+	public String comm_code;
+	
+	public float val1;
+	
 	@Override
-	public void setParams(HashMap<String, Object> params) {
+	public void setSignal(HashMap<String, Object> params) {
 		// TODO Auto-generated method stub
 		
 	}

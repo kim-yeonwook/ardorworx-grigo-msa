@@ -27,6 +27,9 @@ public abstract class MBPLC {
 		}
 	}
 	
+	public String serial_no;
+	public String comm_code;
+	
 	public final static int MBAP_SIZE = 7;
 	
 	public final static int READ = 99;
@@ -57,7 +60,7 @@ public abstract class MBPLC {
 
 	public int end_address;
 	
-	public abstract void setParams(HashMap<String, Object> params);
+	public abstract void setSignal(HashMap<String, Object> params);
 	
 	public abstract byte[] setReq();
 	

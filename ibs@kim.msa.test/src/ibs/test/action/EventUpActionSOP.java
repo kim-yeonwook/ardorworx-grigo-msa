@@ -12,7 +12,7 @@ import v3.venus.route.AdvertizedBus.Callback;
 import v3.venus.route._ADVAction;
 
 @_ADVAction
-public class EventUpAction implements ADVAction {
+public class EventUpActionSOP implements ADVAction {
 	@Override
 	public Callback action() {
 		return (topic, body) -> {
