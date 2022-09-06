@@ -35,7 +35,8 @@ public class MBSender {
 		public static void main(String[] args) {
 			try {
 				
-				MBPLC plc = PMap.get("DI").newInstance();
+				MBPLC plc = PMap.get("RS485").newInstance();
+				plc.start_address = 1300;
 				
 				MBSender con = new MBSender();
 				con.set();

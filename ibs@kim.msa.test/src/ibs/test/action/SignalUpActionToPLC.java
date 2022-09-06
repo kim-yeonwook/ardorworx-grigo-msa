@@ -35,11 +35,7 @@ public class SignalUpActionToPLC implements ADVAction {
 				
 				SignalIF signal = obj.readValue(plan, SignalMap.get((String)map.get("COMM_CODE")));
 				
-//				System.out.println(signal.getComm_code());
-//				System.out.println(PMap.get("DI"));
-//				
-//				현재 comm_code문제로 에러 변경해야함
-//				MBPLC plc = obj.readValue(plan, PMap.get(signal.getComm_code()));
+				MBPLC plc = obj.readValue(plan, PMap.get(signal.getComm_code()));
 				
 				
 			}catch(Exception e) {

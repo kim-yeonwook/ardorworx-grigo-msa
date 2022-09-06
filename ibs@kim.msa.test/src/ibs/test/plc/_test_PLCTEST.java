@@ -105,7 +105,8 @@ public class _test_PLCTEST {
 		byte[] start_address = new byte[2];
 		start_address[0] = 0x00;
 //		start_address[1] = 0x00;
-		start_address[1] = 0x1e;
+//		start_address[1] = 0x1e;
+		start_address[1] = 0x13;
 		
 		System.arraycopy(start_address, 0, result, index, 2);
 		index += 2;
@@ -198,8 +199,8 @@ public class _test_PLCTEST {
 			try {
 				_test_PLCTEST test = new _test_PLCTEST();
 				
-				System.out.println(BytesTest.byte2HexPad(test.writeValue()));
-//				System.out.println(BytesTest.byte2HexPad(test.readValue()));
+//				System.out.println(BytesTest.byte2HexPad(test.writeValue()));
+				System.out.println(BytesTest.byte2HexPad(test.readValue()));
 				
 				test.outPLC(test.readValue());
 //				test.outPLC(test.writeValue());

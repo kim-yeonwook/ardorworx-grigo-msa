@@ -6,7 +6,7 @@ import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
 import ibs.test.util.BytesTest;
 
-@_PLC(comm_code="RS485")
+@_PLC(comm_code="LORA.CS.RS485")
 public class RS485 extends MBPLC {
 
 	private static final int RS485_SIZE = 16;
@@ -58,6 +58,10 @@ public class RS485 extends MBPLC {
 		byte f_code = (byte)(function_code & 0xff);
 		System.arraycopy(f_code, 0, _req, index, 1);
 		index++;
+		
+		byte[] start_address = new byte[BytesTest.SHORT_BYTE];
+		start_address[0] = (byte)(this.start_address>>8 & 0xff);
+		start_address[1] = (byte)(this.start_address & 0xff);
 		
 		byte[] val1 = new byte[BytesTest.SHORT_BYTE];
 		val1 = BytesTest.short2byte(this.val1);

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
 
-@_PLC(comm_code="I2C")
+@_PLC(comm_code="LORA.CS.I2C")
 public class I2C extends MBPLC {
 	
 	public String serial_no;

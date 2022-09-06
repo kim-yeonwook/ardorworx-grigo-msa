@@ -5,7 +5,7 @@ import java.util.HashMap;
 import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
 
-@_PLC(comm_code="DO")
+@_PLC(comm_code="LORA.CS.DO")
 public class DO extends MBPLC{
 	
 	public String serial_no;
