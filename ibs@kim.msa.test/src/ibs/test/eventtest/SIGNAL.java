@@ -13,4 +13,13 @@ public class SIGNAL {
 		
 		return signal;
 	}
+	
+	public EVENT eval(THRESHOLD t) throws Exception {
+
+		for (CALCULATION c : t.calc) {
+			
+		}
+		
+		return null;
+	}
 }

@@ -30,6 +30,7 @@ public class EVENT {
 				SIGNAL signal = new SIGNAL();
 
 				// 2. 올라온 시그널로 발생할 수 있는 이벤트들의 임계치 검색 (시그널 하나당 이벤트 여러개 가능)
+				
 				List<THRESHOLD> t_group = new ArrayList<THRESHOLD>();
 
 				// 3. 시그널을 임계치로 평가

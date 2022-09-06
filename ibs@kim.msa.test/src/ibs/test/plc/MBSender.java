@@ -6,6 +6,8 @@ import java.net.Socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ibs.test.signal.Signal;
+
 public class MBSender {
 	
 	public Socket _so;
@@ -34,9 +36,10 @@ public class MBSender {
 	private static final class test {
 		public static void main(String[] args) {
 			try {
+				Signal signal = new Signal();
 				
 				MBPLC plc = PMap.get("RS485").newInstance();
-				plc.start_address = 1300;
+				plc.start_address = MEMMap.get(signal.serial_no);
 				
 				MBSender con = new MBSender();
 				con.set();

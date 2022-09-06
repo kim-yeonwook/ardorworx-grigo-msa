@@ -31,7 +31,7 @@ public abstract class MBPLC {
 	// 0으로 지정하면 메모리는 1로잡힘 (예 : start_address를 50으로 지정하면 메모리는 51로 잡힘)
 	public int start_address;
 	
-	public abstract void setSignal(HashMap<String, Object> params);
+	public abstract void setSignal(SignalIF signal);
 	
 	public abstract byte[] setReq();
 	

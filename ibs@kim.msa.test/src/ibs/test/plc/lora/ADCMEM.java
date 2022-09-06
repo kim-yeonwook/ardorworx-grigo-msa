@@ -1,25 +1,24 @@
 package ibs.test.plc.lora;
 
-import java.util.HashMap;
-
 import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
+import ibs.test.signal.SignalIF;
+import ibs.test.signal.loras.ADC;
 
-@_PLC(comm_code="LORA.CS.DI")
-public class DI extends MBPLC {
+@_PLC(comm_code="LORA.CS.ADC")
+public class ADCMEM extends MBPLC {
 	
 	public String serial_no;
 	public String comm_code;
 	
-	public int val1;
-	public int val2;
+	private ADC signal;
 	
 	@Override
-	public void setSignal(HashMap<String, Object> params) {
+	public void setSignal(SignalIF signal) {
 		// TODO Auto-generated method stub
-		
+		this.signal = (ADC)signal;
 	}
-	
+
 	@Override
 	public byte[] setReq() {
 		// TODO Auto-generated method stub
