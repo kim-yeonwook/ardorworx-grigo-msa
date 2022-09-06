@@ -22,8 +22,14 @@ public class UARTMEM extends MBPLC {
 	}
 	
 	@Override
-	public byte[] setReq() {
+	public byte[] setReq(byte[] _req) {
 		// TODO Auto-generated method stub
-		return null;
+		return _req;
+	}
+	
+	@Override
+	public int dataLength() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

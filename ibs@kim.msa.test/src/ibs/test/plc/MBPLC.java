@@ -12,8 +12,9 @@ public abstract class MBPLC {
 	public String serial_no;
 	public String comm_code;
 	
-	public final static int MBAP_SIZE = 7;
-	public static final int MEM_LENGTH = 2;
+	public static final int MEM_SIZE = 30;
+	public static final int MBAP_SIZE = 7;
+	public static final int WORD_SIZE = 2;
 	
 	// 2 byte
 	public static final byte[] TRANSACTION = {0x00, 0x00};
@@ -33,7 +34,39 @@ public abstract class MBPLC {
 	
 	public abstract void setSignal(SignalIF signal);
 	
-	public abstract byte[] setReq();
+	public byte[] setReq() {
+		
+		byte[] _req = new byte[MEM_SIZE];
+		int index = 0;
+
+		System.arraycopy(TRANSACTION, 0, _req, index, WORD_SIZE);
+		index += WORD_SIZE;
+		
+		System.arraycopy(PROTOCOL, 0, _req, index, WORD_SIZE);
+		index += WORD_SIZE;
+		
+		int leng = dataLength(); 
+		byte[] length = new byte[WORD_SIZE];
+		length[0] = (byte)(leng>>8 & 0xff);
+		length[1] = (byte)(leng & 0xff);
+		System.arraycopy(length, 0, _req, index, WORD_SIZE);
+		index += WORD_SIZE;
+		
+		_req[index++] = (byte)(unit_id);
+		
+		_req[index++] = (byte)(function_code & 0xff);
+		
+		byte[] start_address = new byte[WORD_SIZE];
+		start_address[0] = (byte)(this.start_address>>8 & 0xff);
+		start_address[1] = (byte)(this.start_address & 0xff);
+		System.arraycopy(start_address, 0, _req, index, WORD_SIZE);
+		index += WORD_SIZE;
+		
+		return setReq(_req);
+	}
+	public abstract byte[] setReq(byte[] _req);
+	
+	public abstract int dataLength();
 	
 	public void write(DataOutputStream _out) throws Exception {
 		byte[] _req = setReq();

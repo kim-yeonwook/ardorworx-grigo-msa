@@ -18,10 +18,16 @@ public class ADCMEM extends MBPLC {
 		// TODO Auto-generated method stub
 		this.signal = (ADC)signal;
 	}
-
+	
 	@Override
-	public byte[] setReq() {
+	public byte[] setReq(byte[] _req) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public int dataLength() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

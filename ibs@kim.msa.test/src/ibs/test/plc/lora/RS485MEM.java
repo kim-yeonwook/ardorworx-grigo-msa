@@ -36,49 +36,22 @@ public class RS485MEM extends MBPLC {
 	}
 	
 	@Override
-	public byte[] setReq() {
-		// TODO Auto-generated method stub
-		byte[] _req = new byte[MBAP_SIZE + RS485_SIZE];
-		int index = 0;
-
-		System.arraycopy(TRANSACTION, 0, _req, index, BytesTest.SHORT_BYTE);
-		index += BytesTest.SHORT_BYTE;
+	public byte[] setReq(byte[] _req) {
+		int index = MBAP_SIZE - 1;
 		
-		System.arraycopy(PROTOCOL, 0, _req, index, BytesTest.SHORT_BYTE);
-		index += BytesTest.SHORT_BYTE;
-		
-		byte[] leng = setLength();
-		System.arraycopy(leng, 0, _req, index, BytesTest.SHORT_BYTE);
-		index += BytesTest.SHORT_BYTE;
-		
-		System.arraycopy(unit_id, 0, _req, index, 1);
-		index++;
-		
-		byte f_code = (byte)(function_code & 0xff);
-		System.arraycopy(f_code, 0, _req, index, 1);
-		index++;
-		
-		byte[] start_address = new byte[BytesTest.SHORT_BYTE];
-		start_address[0] = (byte)(this.start_address>>8 & 0xff);
-		start_address[1] = (byte)(this.start_address & 0xff);
-		
-		for (int a = 0; a < this.signal.size(); a++) {
-			byte[] val = new byte[BytesTest.SHORT_BYTE];
-			val = BytesTest.short2byte(this.signal.get(a));
-			System.arraycopy(val, 0, _req, index, BytesTest.SHORT_BYTE);
-			index += BytesTest.SHORT_BYTE;
+		for (int size = 0; size < this.signal.size(); size++) {
+			byte[] val = new byte[WORD_SIZE];
+			val = BytesTest.short2byte(this.signal.get(size));
+			System.arraycopy(val, 0, _req, index, WORD_SIZE);
+			index += WORD_SIZE;
 		}
 		
 		return _req;
 	}
 	
-	protected byte[] setLength() {
-		int leng = MEM_LENGTH + RS485_SIZE; 
-		byte[] length = new byte[BytesTest.SHORT_BYTE];
-		int size = length.length;
-		for (int index = 0; index < size; index++) {
-			length[size-(index+1)] = (byte)((leng>>8*index)&0xff);
-		}
-		return length;
+	@Override
+	public int dataLength() {
+		return WORD_SIZE + RS485_SIZE;
 	}
+	
 }
