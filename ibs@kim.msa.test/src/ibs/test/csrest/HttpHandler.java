@@ -18,5 +18,4 @@ public abstract class HttpHandler {
 	
 	public abstract HttpURLConnection getHttpUrlConnection(String url) throws Exception;
 
-//	public abstract HttpURLConnection getHttpUrlConnection(String key) throws Exception;
 }

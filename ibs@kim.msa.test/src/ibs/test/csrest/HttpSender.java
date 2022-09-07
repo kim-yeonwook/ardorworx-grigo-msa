@@ -9,9 +9,6 @@ import java.util.HashMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HttpSender {
-//	
-//	DataOutputStream _out;
-//	DataInputStream _in;
 	
 	HttpURLConnection con;
 	

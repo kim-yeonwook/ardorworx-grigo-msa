@@ -29,7 +29,7 @@ public class DownLinkAction implements ADVAction {
 				pack.decode(map);
 				
 				DownFrame frame = new DownFrame();
-				frame.pub("" + pack.getTopic() , pack.encode());
+				frame.pub(pack.getTopic() , pack.encode());
 				
 				
 			} catch (Exception e) {

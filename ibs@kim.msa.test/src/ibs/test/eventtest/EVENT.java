@@ -29,6 +29,8 @@ public class EVENT {
 				// 1. 시그널 발생
 				SIGNAL signal = new SIGNAL();
 
+//				EVENTGROUP group = new EVENTGROUP();
+				
 				// 2. 올라온 시그널로 발생할 수 있는 이벤트들의 임계치 검색 (시그널 하나당 이벤트 여러개 가능)
 				
 				List<THRESHOLD> t_group = new ArrayList<THRESHOLD>();
@@ -39,11 +41,15 @@ public class EVENT {
 						
 						// 4. 이벤트 발생
 						EVENT e = new EVENT();
-						
+//						group.add(e);
 						// 5. 이벤트 ADV
 						e.action();
 					}
 				}
+				
+//				group.action();
+				
+				
 				
 				/////////////////////////////////////////////////////////////////////////////////////
 //				// 1. 시그널 발생
