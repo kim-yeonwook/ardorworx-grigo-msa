@@ -40,7 +40,6 @@ public class EVENT {
 						// 4. 이벤트 발생
 						EVENT e = new EVENT();
 						
-						
 						// 5. 이벤트 ADV
 						e.action();
 					}

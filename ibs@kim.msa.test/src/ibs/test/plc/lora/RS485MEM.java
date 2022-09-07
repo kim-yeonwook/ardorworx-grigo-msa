@@ -36,7 +36,7 @@ public class RS485MEM extends MBPLC {
 	
 	@Override
 	public byte[] setReq(byte[] _req) {
-		int index = 10;
+		int index = 13;
 		
 		for (int size = 0; size < this.signal.size(); size++) {
 			byte[] val = new byte[WORD_SIZE];

@@ -106,7 +106,7 @@ public class _test_PLCTEST {
 		start_address[0] = 0x00;
 //		start_address[1] = 0x00;
 //		start_address[1] = 0x1e;
-		start_address[1] = 0x13;
+		start_address[1] = 0x63;
 		
 		System.arraycopy(start_address, 0, result, index, 2);
 		index += 2;
@@ -114,7 +114,7 @@ public class _test_PLCTEST {
 		byte[] end_address = new byte[2];
 		end_address[0] = 0x00;
 //		end_address[1] = 0x14;
-		end_address[1] = 0x02;
+		end_address[1] = 0x0f;
 		
 		System.arraycopy(end_address, 0, result, index, 2);
 		index += 2;

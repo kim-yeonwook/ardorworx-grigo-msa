@@ -34,6 +34,7 @@ public class MBSender {
 			if(_so!=null) {try {_so.close();}catch (Exception e1) {}}
 			if(_in!=null) {try { _in.close();}catch (Exception e1) {}}
 			if(_out!=null) {try { _out.close();}catch (Exception e1) {}}
+			System.out.println("SOCKET CONNETED FAILED");
 		}
 	}
 	
@@ -76,7 +77,7 @@ public class MBSender {
 				
 				MBPLC plc = new RS485MEM();
 				plc.setSignal(signal);
-				plc.start_address = 100;
+				plc.setSAddress(100);
 				
 				MBSender con = new MBSender();
 				con.open();

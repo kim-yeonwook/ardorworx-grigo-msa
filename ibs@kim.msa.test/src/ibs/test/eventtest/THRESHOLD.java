@@ -8,6 +8,10 @@ public class THRESHOLD {
 	
 	public boolean eval(SIGNAL signal) throws Exception {
 		
+		for(CALCULATION c : calc) {
+			if(c.calc()) return true;
+		}
+		
 		return false;
 		
 	}
