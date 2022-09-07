@@ -1,22 +1,26 @@
 package ibs.test.plc.lora;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
 import ibs.test.signal.SignalIF;
 import ibs.test.signal.loras.DO;
 
-@_PLC(comm_code="LORA.CS.DO")
+@_PLC(comm_code="DO")
 public class DOMEM extends MBPLC{
 	
 	public String serial_no;
 	public String comm_code;
 	
-	private DO signal;
+	private List<Integer> signal = new ArrayList<Integer>();
 
 	@Override
 	public void setSignal(SignalIF signal) {
 		// TODO Auto-generated method stub
-		this.signal = (DO)signal;
+		this.signal.add(((DO)signal).val1);
+		this.signal.add(((DO)signal).val2);
 	}
 	
 	@Override

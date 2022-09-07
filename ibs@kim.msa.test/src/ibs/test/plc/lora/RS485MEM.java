@@ -8,7 +8,7 @@ import ibs.test.signal.SignalIF;
 import ibs.test.signal.loras.RS485;
 import ibs.test.util.BytesTest;
 
-@_PLC(comm_code="LORA.CS.RS485")
+@_PLC(comm_code="RS485")
 public class RS485MEM extends MBPLC {
 
 	private static final int RS485_SIZE = 16;
@@ -24,7 +24,6 @@ public class RS485MEM extends MBPLC {
 	public void setSignal(SignalIF signal) {
 		// TODO Auto-generated method stub
 //		this.signal = (RS485)signal;
-		RS485 s = (RS485)signal;
 		this.signal.add(((RS485)signal).val1);
 		this.signal.add(((RS485)signal).val2);
 		this.signal.add(((RS485)signal).val3);
@@ -37,7 +36,7 @@ public class RS485MEM extends MBPLC {
 	
 	@Override
 	public byte[] setReq(byte[] _req) {
-		int index = MBAP_SIZE - 1;
+		int index = 10;
 		
 		for (int size = 0; size < this.signal.size(); size++) {
 			byte[] val = new byte[WORD_SIZE];

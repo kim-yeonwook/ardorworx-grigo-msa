@@ -7,9 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ibs.test.edge.Edge;
 import ibs.test.plc.MBPLC;
+import ibs.test.plc.MBSender;
+import ibs.test.plc.MEMMap;
 import ibs.test.plc.PMap;
 import ibs.test.signal.SignalIF;
 import ibs.test.signal.SignalMap;
+import ibs.test.util.EUIGen;
 import mecury.io.Bytes;
 import mecury.log.Log;
 import v3.venus.mod.Modular;
@@ -35,8 +38,11 @@ public class SignalUpActionToPLC implements ADVAction {
 				
 				SignalIF signal = obj.readValue(plan, SignalMap.get((String)map.get("COMM_CODE")));
 				
-				MBPLC plc = obj.readValue(plan, PMap.get(signal.getComm_code()));
+				MBPLC plc = obj.readValue(plan, PMap.get(new EUIGen().gen2Serial(signal.getSerial_no()).toCode()));
+				plc.setSignal(signal);
+				plc.setSAddress(MEMMap.get(signal.getSerial_no()));
 				
+				MBSender.send(plc);
 				
 			}catch(Exception e) {
 				Log.err(Modular.ID, "SIGNAL UP ACTION ERR", e);
@@ -47,6 +53,6 @@ public class SignalUpActionToPLC implements ADVAction {
 	@Override
 	public String topic() {
 		// TODO Auto-generated method stub
-		return "ADV/edge/signal/up1";
+		return "ADV/edge/signal/up";
 	}
 }

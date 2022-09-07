@@ -8,6 +8,8 @@ import ibs.test.bus.AdvertizedMosTest;
 import ibs.test.bus.RequestMosTest;
 import ibs.test.bus.ServiceMosTest;
 import ibs.test.edge.Edge;
+import ibs.test.plc.MBSender;
+import ibs.test.plc.MEMMap;
 import ibs.test.plc.PMap;
 import ibs.test.plc._PLC;
 import ibs.test.signal.SignalMap;
@@ -47,6 +49,8 @@ public class KimLoader extends Modular {
 		Edge.setEdge();
 		
 		apiMap = new ApiMap();
+		test();
+		MBSender.open();
 		
 		super.hello();
 		
@@ -54,6 +58,21 @@ public class KimLoader extends Modular {
 			ADVRouter.pub("ADV/edge/" + e.id +"/reset", new byte[] {});
 		}
 		
+	}
+	
+	public void test() throws Exception {
+		MEMMap.put("BA-K41-220704-002", 100);
+		MEMMap.put("BA-K33-220704-003", 200);
+		MEMMap.put("BA-K32-220704-007", 300);
+		MEMMap.put("BA-K52-220704-004", 400);
+		MEMMap.put("BA-K53-220704-005", 500);
+		MEMMap.put("BA-K21-220704-008", 600);
+		MEMMap.put("BA-K41-220704-001", 700);
+		MEMMap.put("BA-K11-220519-001", 800);
+		MEMMap.put("BA-K11-220519-003", 900);
+		MEMMap.put("BA-K60-220401-006", 1000);
+		MEMMap.put("BA-K40-220401-004", 1100);
+		MEMMap.put("BA-K10-220519-002", 1200);
 	}
 	
 	@Override
@@ -80,6 +99,13 @@ public class KimLoader extends Modular {
 			advBus = new AdvertizedMosTest(); 
 		}
 		ADVRouter.open(advBus,tasks, advAction);
+	}
+	
+	@Override
+	public void bye() {
+		// TODO Auto-generated method stub
+		super.bye();
+		MBSender.close();
 	}
 	
 	

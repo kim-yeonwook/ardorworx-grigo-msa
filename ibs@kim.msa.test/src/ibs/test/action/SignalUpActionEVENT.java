@@ -56,7 +56,7 @@ public class SignalUpActionEVENT implements ADVAction {
 	@Override
 	public String topic() {
 		// TODO Auto-generated method stub
-		return "ADV/edge/signal/up";
+		return "ADV/edge/signal/up1";
 	}
 
 }

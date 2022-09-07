@@ -25,7 +25,7 @@ public abstract class MBPLC {
 
 	// TCP 통신 0x01로 고정
 	public byte unit_id = 0x01;
-	public byte function_code;
+	public byte function_code = 0x06;
 	
 
 	// 시작 메모리는 0으로 시작하지 않음 (1 ~ 9999, 10001 ~ 19999, 30001 ~ 40001, 40001 ~ 49999)
@@ -45,7 +45,7 @@ public abstract class MBPLC {
 		System.arraycopy(PROTOCOL, 0, _req, index, WORD_SIZE);
 		index += WORD_SIZE;
 		
-		int leng = dataLength(); 
+		int leng = 24; 
 		byte[] length = new byte[WORD_SIZE];
 		length[0] = (byte)(leng>>8 & 0xff);
 		length[1] = (byte)(leng & 0xff);
@@ -54,7 +54,7 @@ public abstract class MBPLC {
 		
 		_req[index++] = (byte)(unit_id);
 		
-		_req[index++] = (byte)(function_code & 0xff);
+		_req[index++] = (byte)(function_code);
 		
 		byte[] start_address = new byte[WORD_SIZE];
 		start_address[0] = (byte)(this.start_address>>8 & 0xff);
@@ -68,9 +68,15 @@ public abstract class MBPLC {
 	
 	public abstract int dataLength();
 	
+	public void setSAddress(int address) throws Exception {
+		this.start_address = address-1;
+	}
+	
 	public void write(DataOutputStream _out) throws Exception {
 		byte[] _req = setReq();
 		_out.write(_req);	_out.flush();
+		
+		System.out.println(BytesTest.byte2HexPad(_req));
 	}
 	
 	
@@ -78,7 +84,7 @@ public abstract class MBPLC {
 		byte[] size = new byte[MBAP_SIZE];
 		
 		
-		byte[] _res = new byte[MBAP_SIZE];
+		byte[] _res = new byte[50];
 		
 		_in.read(_res);
 		

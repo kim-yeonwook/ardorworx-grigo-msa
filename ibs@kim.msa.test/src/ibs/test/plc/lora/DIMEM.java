@@ -1,22 +1,26 @@
 package ibs.test.plc.lora;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
 import ibs.test.signal.SignalIF;
 import ibs.test.signal.loras.DI;
 
-@_PLC(comm_code="LORA.CS.DI")
+@_PLC(comm_code="DI")
 public class DIMEM extends MBPLC {
 	
 	public String serial_no;
 	public String comm_code;
 	
-	private DI signal;
+	private List<Integer> signal = new ArrayList<Integer>();
 	
 	@Override
 	public void setSignal(SignalIF signal) {
 		// TODO Auto-generated method stub
-		this.signal = (DI)signal;
+		this.signal.add(((DI)signal).val1);
+		this.signal.add(((DI)signal).val2);
 	}
 	
 	@Override
