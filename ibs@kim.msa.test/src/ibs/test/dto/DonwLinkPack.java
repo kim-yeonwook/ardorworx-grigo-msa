@@ -1,13 +1,16 @@
 package ibs.test.dto;
 
-import java.util.HashMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DonwLinkPack extends IbsPack {
 	
-	public String uuid;
+	public String serial_no;
 	
-	public String app_id;
+	public String data;
 	
-	public HashMap<String, Object> data;
-	
+	@Override
+	public byte[] encode() throws Exception {
+		// TODO Auto-generated method stub
+		return new ObjectMapper().writeValueAsBytes(this);
+	}
 }

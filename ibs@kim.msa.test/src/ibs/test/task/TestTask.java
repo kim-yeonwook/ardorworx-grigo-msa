@@ -1,6 +1,7 @@
 package ibs.test.task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,6 +14,7 @@ import ibs.test.dto.JackSonTestPack;
 import ibs.test.dto.LoRaDevicePack;
 import ibs.test.mail.GmailSend;
 import ibs.test.util.EUIGen;
+import v3.venus.route.ADVRouter;
 
 public class TestTask {
 	
@@ -38,21 +40,8 @@ public class TestTask {
 	}
 
 	public void downLinkTest(DonwLinkPack pack) throws Exception {
-		ObjectMapper obj = new ObjectMapper();
-		
-		EUIGen gen = new EUIGen().gen2Serial(pack.uuid);
-		
-		ThingsMap map = new ThingsMap();
-		
-		Things things = obj.readValue(obj.writeValueAsBytes(pack.data), map.get(gen.toCode()));
-		things.interface_type = Integer.parseInt(gen.dtype1);
-		things.sensor_number = Integer.parseInt(gen.dtype2);
-		things.encode();
-		
-		DownFrame frame = new DownFrame();
-		frame.pub("application/" + pack.app_id + "/device/" + gen.eui + "/command/down", things.down());
 	
-		frame.close();
+		ADVRouter.pub("ADV/down/signal", pack.encode());
 	}
 	
 	public void InsertLoRaDeviceIntoCS(LoRaDevicePack pack) throws Exception {
