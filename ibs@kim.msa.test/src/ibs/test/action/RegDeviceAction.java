@@ -4,12 +4,11 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
-import ibs.test.csrest.HttpSender;
-import ibs.test.csrest.cs.APPKEY;
-import ibs.test.csrest.cs.INDEVICE;
-import ibs.test.dto.HttpRequestPack;
+import ibs.test.dto.CS_DELIVERY;
+import ibs.test.edge.Edge;
+import ibs.test.task.CS_Task;
+import mecury.io.Bytes;
 import v3.venus.route.ADVAction;
 import v3.venus.route.AdvertizedBus.Callback;
 import v3.venus.route._ADVAction;
@@ -24,29 +23,29 @@ public class RegDeviceAction implements ADVAction {
 			try {
 				ObjectMapper obj = new ObjectMapper();
 				obj.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				obj.enable(SerializationFeature.WRAP_ROOT_VALUE);
 				
-				HttpRequestPack pack = obj.readValue(body, HttpRequestPack.class);
-				pack._payload(body);
-				pack._logTrace(new StringBuffer());
-				pack.decode(obj.readValue(body, HashMap.class));
-
-				// insert device
-				HttpSender sender1 = new HttpSender();
-				sender1.set(new INDEVICE().getHttpUrlConnection("/api/devices"));
-				sender1.send(obj.writerWithView(HttpRequestPack.JACKSONVIEW.DEVICE.class).withRootName("device").writeValueAsBytes(pack));
+				HashMap<String, Object> param = obj.readValue(body, HashMap.class);
+				String MSG = (String)param.get("MSG");
+				int seed = Bytes.int2hex(MSG.substring(MSG.length()-2));
+				MSG = MSG.substring(0,MSG.length()-2).replace('-', '+').replace('_', '/');
+				byte[] plan = Bytes.aes256dec(Edge.edge_list.get(255).key(seed), MSG);
 				
-				System.out.println(sender1.receive());
+//				// param setting
+//				CS_DELIVERY delivery = obj.readValue(plan, CS_DELIVERY.class);
+//				delivery.decode();
+//				
+//				CS_Task cs_task = new CS_Task(delivery);
+//				String jwt = cs_task.jwt();
+//				cs_task.RegistCS(jwt);
 				
 				System.out.println();
+				System.out.println("---------------------------------------------------------------------------------");
 				
-				// setting app_key
-				HttpSender sender2 = new HttpSender();
-				sender2.set(new APPKEY().getHttpUrlConnection("/api/devices/" + pack.devEUI + "/keys"));
-				sender2.send(obj.writerWithView(HttpRequestPack.JACKSONVIEW.APPKEY.class).withRootName("deviceKeys").writeValueAsBytes(pack));
+				System.out.println(topic);
+				System.out.println();
+				System.out.println(obj.writerWithDefaultPrettyPrinter().writeValueAsString(obj.readValue(plan, HashMap.class)));
 				
-				System.out.println(sender2.receive());
-				
+				System.out.println("---------------------------------------------------------------------------------");
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -57,7 +56,7 @@ public class RegDeviceAction implements ADVAction {
 	@Override
 	public String topic() {
 		// TODO Auto-generated method stub
-		return "ADV/LORA/DEVICE";
+		return "ADV/edge/255/node";
 	}
 	
 }

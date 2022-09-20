@@ -3,15 +3,13 @@ package ibs.test.csrest.cs;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ibs.test.csrest.HttpHandler;
+import ibs.test.csrest.CS_REST;
 
-public class JWTTOKEN extends HttpHandler {
-	
-	private static final String API = "/api/internal/login";
+public class JWTTOKEN extends CS_REST {
 	
 	@Override
-	public HttpURLConnection getHttpUrlConnection(String api) throws Exception {
-		URL url = new URL("http://" + HOST + API);
+	public HttpURLConnection getConnection() throws Exception {
+		URL url = new URL(HOST + "/api/internal/login");
 		
 		HttpURLConnection con = (HttpURLConnection)url.openConnection();
 		con.setUseCaches(false);

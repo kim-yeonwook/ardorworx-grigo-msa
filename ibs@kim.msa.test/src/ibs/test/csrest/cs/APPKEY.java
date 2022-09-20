@@ -3,15 +3,17 @@ package ibs.test.csrest.cs;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ibs.test.csrest.HttpHandler;
+import ibs.test.csrest.CS_REST;
 
-public class APPKEY extends HttpHandler {
-	
-	private static final String API = "/api/devices";
+public class APPKEY extends CS_REST {
 	
 	@Override
-	public HttpURLConnection getHttpUrlConnection(String api) throws Exception {
-		URL url = new URL("http://" + HOST + api);
+	public HttpURLConnection getConnection() throws Exception {
+		StringBuilder sb = new StringBuilder(HOST + "/api/devices/");
+		sb.append(eui);
+		sb.append("/keys");
+		
+		URL url = new URL(sb.toString());
 		
 		HttpURLConnection con = (HttpURLConnection)url.openConnection();
 		con.setUseCaches(false);
@@ -21,9 +23,8 @@ public class APPKEY extends HttpHandler {
 		con.setRequestProperty("Content-Type", "application/json; utf-8");
 		con.setRequestProperty("Connection", "keep-alive");
 		con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
-		if (JWT != null) con.setRequestProperty("Grpc-Metadata-Authorization", JWT);
+		if (jwt != null) con.setRequestProperty("Grpc-Metadata-Authorization", jwt);
 		
 		return con;
 	}
-	
 }
