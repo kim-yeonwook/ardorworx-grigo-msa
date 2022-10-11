@@ -224,7 +224,7 @@ public class GmailSend {
 
 		public static void main(String[] args) {
 
-			final String username = "c.eunhye36@gmail.com";
+			final String username = "dsudnr96@gmail.com";
 			final String password = "qrzligtuigihiyvv";
 
 
