@@ -1,5 +1,6 @@
-package ibs.test.dto;
+package ibs.test.dto.test;
 
+import ibs.test.dto.IbsPack;
 import mecury.io.Bytes;
 
 public class AuthCCTVPack extends IbsPack {

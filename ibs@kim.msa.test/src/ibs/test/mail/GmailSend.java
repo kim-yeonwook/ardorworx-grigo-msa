@@ -225,7 +225,8 @@ public class GmailSend {
 		public static void main(String[] args) {
 
 			final String username = "dsudnr96@gmail.com";
-			final String password = "qrzligtuigihiyvv";
+//			final String password = "qrzligtuigihiyvv";
+			final String password = "rladusdnr123";
 
 
 			try {
@@ -261,7 +262,7 @@ public class GmailSend {
 				
 				//받는 사람의 메일 주소
 				InternetAddress[] addressTo = new InternetAddress[1];
-				addressTo[0] = new InternetAddress("ehchoi@ardorworx.co.kr");
+				addressTo[0] = new InternetAddress("dusdnr96@ardorworx.co.kr");
 				msg.setRecipients(Message.RecipientType.TO, addressTo);
 				
 				//메일 전송

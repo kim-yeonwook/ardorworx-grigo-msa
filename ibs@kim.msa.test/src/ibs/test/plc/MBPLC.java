@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.util.HashMap;
 
 import ibs.test.signal.SignalIF;
-import ibs.test.util.BytesTest;
+import ibs.test.util.test.BytesTest;
 
 public abstract class MBPLC {
 

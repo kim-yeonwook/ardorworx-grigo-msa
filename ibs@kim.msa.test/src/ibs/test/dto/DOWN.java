@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 public class DOWN extends IbsPack {
 	
-	@JsonIgnore public static final String AAA = "A";
-	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	public boolean confirmed = true;
 	

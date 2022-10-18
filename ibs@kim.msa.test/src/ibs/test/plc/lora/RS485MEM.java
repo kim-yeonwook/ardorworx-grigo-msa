@@ -6,7 +6,7 @@ import ibs.test.plc.MBPLC;
 import ibs.test.plc._PLC;
 import ibs.test.signal.SignalIF;
 import ibs.test.signal.loras.RS485;
-import ibs.test.util.BytesTest;
+import ibs.test.util.test.BytesTest;
 
 @_PLC(comm_code="RS485")
 public class RS485MEM extends MBPLC {

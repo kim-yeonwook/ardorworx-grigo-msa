@@ -1,7 +1,7 @@
 package ibs.test.down.signal;
 
 import ibs.test.down.Things;
-import ibs.test.util.BytesTest;
+import ibs.test.util.test.BytesTest;
 import mecury.io.Bytes;
 
 public class RS485 extends Things {

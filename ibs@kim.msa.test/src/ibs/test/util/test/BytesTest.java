@@ -1,4 +1,4 @@
-package ibs.test.util;
+package ibs.test.util.test;
 
 public class BytesTest {
 	public final static int BIG_ENDIAN = 99;

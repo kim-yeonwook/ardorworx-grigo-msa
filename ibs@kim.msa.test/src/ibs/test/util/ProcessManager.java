@@ -4,45 +4,26 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import mecury.io.LocalProperties;
 import mecury.log.Log;
 import v3.venus.mod.Modular;
 
 public class ProcessManager {
 	
-//	echo 1q2w3e4r%^ | sudo -S mosquitto_passwd -b /etc/mosquitto/passwd b40a7d29f3bb4e0c '!b40a7d29f3bb4e0c!'
-//	명령어에 비밀번호를 주는것은 보안상 안좋음 // 일단 파일의 권한을 변경
-	private static final String SUDO = LocalProperties.get("sudo", "/bin/bash -c echo 1q2w3e4r%^");
-	private static final String HEADER = LocalProperties.get("header", "cmd.exe /c");
-	
-	
 	ProcessBuilder process;
-	
-	public List<String> command;
-	
-	StringBuffer sb;
+	List<String> command;
 	
 	public ProcessManager() {
 		// TODO Auto-generated constructor stub
 		this.process = new ProcessBuilder();
-		this.sb = new StringBuffer();
 		this.command = new ArrayList<String>();
-		command.addAll(Arrays.asList(new String[] {"cmd.exe", "/c"}));
 	}
 	
-	public void open(String command) throws Exception {
-		try {
-			process = new ProcessBuilder().command("cmd.exe", "/c", command);
-			sb = new StringBuffer();
-		} catch (Exception e) {
-		}
-	}
 	
-	public void setCommand(String command) throws Exception {
+	public ProcessManager setCommand(String command) throws Exception {
 		this.command.add(command);
+		return this;
 	}
 	
 	public void move(String path) throws Exception {
@@ -53,30 +34,25 @@ public class ProcessManager {
 		Process p = null;
 		try {
 			Log.info(Modular.ID, command.toArray());
-			
-			process.command(this.command);
+			process.command(command);
 			
 			p = process.start();
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "MS949"));
 			
+			StringBuffer sb = new StringBuffer();
 			String s = "";
 			while ((s = br.readLine()) != null ) {
-				this.sb.append(s);
-				System.out.println(s);
+				sb.append(s).append("\n");
 			}
-			
-			try {p.getInputStream().close();} catch(Exception e) {}
-			try {p.getErrorStream().close();} catch(Exception e) {}
-			try {p.getOutputStream().close();} catch(Exception e) {}
-			
-			p.waitFor();
-	
+
 			p.destroy();
+			p.waitFor();
 			
-			return new String(this.sb);
+			Log.info(Modular.ID, sb);
+			return new String(sb);
 		} catch (Exception e) {
-			Log.info(Modular.ID, "Process Command Send Fail");
+			Log.err(Modular.ID, "Process Command Send Fail", e);
 			if (p!=null) {
 				p.destroy();
 				p.waitFor();
@@ -89,14 +65,13 @@ public class ProcessManager {
 		public static void main(String[] args) {
 			try {
 				ProcessManager m = new ProcessManager();
-//				m.open("dir");
-				m.setCommand("dir");;
-				
+//				m.setCommand("cmd.exe");
+				m.setCommand("cmd.exe").setCommand("/c");
+//				m.setCommand("cmd.exe").setCommand("/c").setCommand("dir");
 				m.move("C:\\");
-//				m.open("ipconfig");
 				
 				System.out.println(m.send());
-				
+				System.out.println("Close");
 				
 			} catch (Exception e) {
 				e.printStackTrace();

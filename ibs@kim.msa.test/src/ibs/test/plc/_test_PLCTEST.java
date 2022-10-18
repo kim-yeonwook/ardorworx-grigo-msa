@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-import ibs.test.util.BytesTest;
+import ibs.test.util.test.BytesTest;
 
 public class _test_PLCTEST {
 	

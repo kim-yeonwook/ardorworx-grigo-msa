@@ -1,4 +1,4 @@
-package ibs.test.util;
+package ibs.test.util.test;
 
 import java.security.Key;
 import java.util.Base64;

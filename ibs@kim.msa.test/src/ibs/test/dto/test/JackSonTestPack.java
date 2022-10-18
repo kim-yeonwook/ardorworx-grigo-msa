@@ -1,9 +1,11 @@
-package ibs.test.dto;
+package ibs.test.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ibs.test.dto.IbsPack;
 
 @JsonIgnoreProperties({"propertiTest1", "propertiTest2"})
 public class JackSonTestPack extends IbsPack {

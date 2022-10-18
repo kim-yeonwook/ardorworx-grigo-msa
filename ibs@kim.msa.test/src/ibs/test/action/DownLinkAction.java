@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -22,14 +23,16 @@ import v3.venus.route._ADVAction;
 @_ADVAction
 public class DownLinkAction implements ADVAction {
 
+int app_id = LocalProperties.getInt("lora.network.server.app.id");
+	
 	@Override
 	public Callback action() {
 		// TODO Auto-generated method stub
 		return (topic, body) -> {
 			MqttClient client = null;
-			String broker = LocalProperties.get("edge.broker", "tcp://192.168.0.170:1883");
-			String id = LocalProperties.get("edge.broker.id", "ardorworx");
-			String pass = LocalProperties.get("edge.broker.pass", "1q2w3e4r%^");
+			String broker = LocalProperties.get("probe.mq.broker");
+			String id = LocalProperties.get("probe.mq.id");
+			String pass = LocalProperties.get("probe.mq.pass");
 			
 			try {
 				ObjectMapper obj = new ObjectMapper();
@@ -39,36 +42,26 @@ public class DownLinkAction implements ADVAction {
 				String MSG = (String)param.get("MSG");
 				int seed = Bytes.int2hex(MSG.substring(MSG.length()-2));
 				MSG = MSG.substring(0,MSG.length()-2).replace('-', '+').replace('_', '/');
-				byte[] plan = Bytes.aes256dec(Edge.edge_list.get(255).key(seed), MSG);
+				byte[] plan = Bytes.aes256dec(Edge.edge_list.get((int)param.get("USR_SEQ")).key(seed), MSG);
 				DOWN down = obj.readValue(plan, DOWN.class);
 				
-//				client = new MqttClient(broker, MqttClient.generateClientId(), new MemoryPersistence());
-//				
-//				MqttConnectOptions option = new MqttConnectOptions();
-//				option.setKeepAliveInterval(30);
-//				option.setCleanSession(true);
-//				option.setUserName(id);
-//				option.setPassword(pass.toCharArray());
+				client = new MqttClient(broker, MqttClient.generateClientId(), new MemoryPersistence());
 				
-//				client.connect(option);
+				MqttConnectOptions option = new MqttConnectOptions();
+				option.setKeepAliveInterval(30);
+				option.setCleanSession(true);
+				option.setUserName(id);
+				option.setPassword(pass.toCharArray());
 				
-				System.out.println();
-				System.out.println("---------------------------------------------------------------------------------");
-				
-				System.out.println(topic);
-				System.out.println();
-				System.out.println(obj.writerWithDefaultPrettyPrinter().writeValueAsString(obj.readValue(plan, HashMap.class)));
-				
-				System.out.println("---------------------------------------------------------------------------------");
+				client.connect(option);
 					
-//				client.publish("application/6/device/" + down.devEUI + "/command/down", new MqttMessage(obj.writeValueAsBytes(down)));
+				client.publish("application/"+app_id+"/device/" + down.devEUI + "/command/down", new MqttMessage(obj.writeValueAsBytes(down)));
 			
-//				client.disconnect();
+				client.disconnect(); client.close();
 				Log.info(Modular.ID, "DownLink OK");
 			} catch (Exception e) {
-				if (client != null) try { client.disconnect(); } catch (Exception e1) {}
-				Log.info(Modular.ID, "DownLink Fail");
-				Log.info(Modular.ID, e);
+				if (client != null) try { client.disconnect(); client.close(); } catch (Exception e1) {}
+				Log.err(Modular.ID, "DownLink Fail", e);
 			} 
 		};
 	}
@@ -76,6 +69,6 @@ public class DownLinkAction implements ADVAction {
 	@Override
 	public String topic() {
 		// TODO Auto-generated method stub
-		return "ADV/ADV/ADV/ADV";
+		return "ADV/edge/255/lora/set";
 	}
 }
