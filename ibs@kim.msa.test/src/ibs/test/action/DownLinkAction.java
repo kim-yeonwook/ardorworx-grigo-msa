@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ibs.test.dto.DOWN;
+import ibs.test.dto.chirp.DOWN;
 import ibs.test.edge.Edge;
 import mecury.io.Bytes;
 import mecury.io.LocalProperties;

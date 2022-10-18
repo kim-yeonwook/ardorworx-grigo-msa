@@ -1,4 +1,4 @@
-package ibs.test.mail;
+package ibs.test.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import ibs.test.dto.UserDetailPack;
+import ibs.test.dto.test.UserDetailPack;
 import mecury.io.LocalProperties;
 import mecury.log.Log;
 import xery.mecury.GridSet;

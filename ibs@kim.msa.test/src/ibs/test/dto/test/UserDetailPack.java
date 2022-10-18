@@ -1,10 +1,12 @@
-package ibs.test.dto;
+package ibs.test.dto.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ibs.test.dto.IbsPack;
 
 public class UserDetailPack extends IbsPack {
 	public String user_id;

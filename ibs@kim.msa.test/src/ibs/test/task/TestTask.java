@@ -1,12 +1,7 @@
 package ibs.test.task;
 
-import java.util.ArrayList;
-
-import ibs.test.dto.DonwLinkPack;
 import ibs.test.dto.test.AuthCCTVPack;
 import ibs.test.dto.test.JackSonTestPack;
-import ibs.test.mail.GmailSend;
-import v3.venus.route.ADVRouter;
 
 public class TestTask {
 	
@@ -31,16 +26,4 @@ public class TestTask {
 		return pack;
 	}
 
-	public void downLinkTest(DonwLinkPack pack) throws Exception {
-	
-		ADVRouter.pub("ADV/down/signal", pack.encode());
-	}
-	
-	public void smtpTest(DonwLinkPack pack) throws Exception {
-		GmailSend g = new GmailSend();
-		
-		ArrayList<String> e_mail = new ArrayList<String>();
-		e_mail.add("dsudnr96@naver.com");
-		g.send(e_mail, "타이틀", "메세지");
-	}
 }

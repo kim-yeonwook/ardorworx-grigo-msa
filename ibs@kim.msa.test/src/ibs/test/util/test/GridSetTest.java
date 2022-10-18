@@ -1,6 +1,6 @@
 package ibs.test.util.test;
 
-import ibs.test.dto.DOWN;
+import ibs.test.dto.chirp.DOWN;
 import xery.mecury.GridSet;
 import xery.mecury.Result;
 

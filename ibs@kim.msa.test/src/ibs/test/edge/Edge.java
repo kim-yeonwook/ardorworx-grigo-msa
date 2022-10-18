@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ibs.test.MariaPool;
 import ibs.test.Xery;
-import ibs.test.dto.EdgePack;
+import ibs.test.dto.edge.EdgePack;
 import mecury.io.Bytes;
 import xery.mecury.GridSet;
 import xery.mecury.Result;

@@ -1,8 +1,9 @@
-package ibs.test.dto;
+package ibs.test.dto.chirp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import ibs.test.dto.IbsPack;
 
 public class DOWN extends IbsPack {
 	

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import ibs.test.dto.EdgePack;
 import ibs.test.dto.chirp.GateWayPack;
+import ibs.test.dto.edge.EdgePack;
 import ibs.test.edge.Edge;
 import ibs.test.rest.cs.ChirpStack;
 import ibs.test.util.ProcessManager;

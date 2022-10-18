@@ -1,4 +1,4 @@
-package ibs.test.dto;
+package ibs.test.dto.edge;
 
 import java.util.HashMap;
 
@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ibs.test.dto.IbsPack;
 import ibs.test.edge.Edge;
 import mecury.io.Bytes;
 

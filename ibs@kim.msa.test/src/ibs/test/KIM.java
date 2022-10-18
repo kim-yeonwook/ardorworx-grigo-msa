@@ -2,9 +2,8 @@ package ibs.test;
 
 import java.util.HashMap;
 
-import ibs.test.dto.DonwLinkPack;
-import ibs.test.dto.EdgePack;
 import ibs.test.dto.IbsPack;
+import ibs.test.dto.edge.EdgePack;
 import ibs.test.dto.test.AuthCCTVPack;
 import ibs.test.dto.test.JackSonTestPack;
 import ibs.test.edge.Edge;
@@ -30,18 +29,6 @@ public class KIM {
 	@_uri(method=UriMethod.PUT, uri="/node/json/test")
 	public JackSonTestPack jackSonTest(JackSonTestPack pack) throws Exception {
 		return new TestTask().jackSonTest(pack);
-	}
-
-	// 다운 링크 TEST
-	@_uri(method=UriMethod.PUT, uri="/node/donwlink")
-	public void downLinkTest(DonwLinkPack pack) throws Exception {
-		new TestTask().downLinkTest(pack);
-	}
-
-	// SMTP TEST
-	@_uri(method=UriMethod.PUT, uri="/node/smtp")
-	public void smtpTest(DonwLinkPack pack) throws Exception {
-		new TestTask().smtpTest(pack);
 	}
 
 	// SERVICE BUS TEST

@@ -1,4 +1,4 @@
-package ibs.test.dto;
+package ibs.test.dto.edge;
 
 import java.util.HashMap;
 
