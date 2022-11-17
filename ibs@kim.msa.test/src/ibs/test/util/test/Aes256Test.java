@@ -1,5 +1,7 @@
 package ibs.test.util.test;
 
+import java.io.OutputStream;
+import java.net.Socket;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Random;
@@ -76,24 +78,34 @@ public class Aes256Test {
 		public static void main(String[] args) {
 			try {
 				
-			Aes256Test aes = new Aes256Test();
+//				String  a = "AQEJAA4QAAEBAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAAA=";
+//				byte[] z = Base64.getDecoder().decode(a);
+//				System.out.println(BytesTest.byte2HexPad(z));
+				
+//				Socket so = new Socket("118.67.142.121", 9000);
+//				so.connect(endpoint);
+//				System.out.println("aaaaaaaaaaaaaa");
+//				OutputStream out = so.getOutputStream();
+//				out.close();
+//				so.close();
+//			Aes256Test aes = new Aes256Test();
 			
-			aes.crtKey();
+//			aes.crtKey();
 			
-			String e = Bytes.aes256enc(Aes256Test.SECRET_KEY, new ObjectMapper().writeValueAsBytes("안녕하세요"));
-			String z = Bytes.aes256enc(Aes256Test.SECRET_KEY, new ObjectMapper().writeValueAsBytes("안녕하세요"));
+//			String e = Bytes.aes256enc(Aes256Test.SECRET_KEY, new ObjectMapper().writeValueAsBytes("안녕하세요"));
+//			String z = Bytes.aes256enc(Aes256Test.SECRET_KEY, new ObjectMapper().writeValueAsBytes("안녕하세요"));
 			
 //			System.out.println(new String(Aes256Test.SECRET_KEY));
-			System.out.println(e);
-			System.out.println(z);
-			System.out.println(e.replace('+', '-').replace('/', '_').replace("=", ""));
-			System.out.println(z.replace('+', '-').replace('/', '_').replace("=", ""));
+//			System.out.println(e);
+//			System.out.println(z);
+//			System.out.println(e.replace('+', '-').replace('/', '_').replace("=", ""));
+//			System.out.println(z.replace('+', '-').replace('/', '_').replace("=", ""));
 			
-			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e)));      
-			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('+', '-').replace('/', '_').replace("=", ""))));      
+//			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e)));      
+//			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('+', '-').replace('/', '_').replace("=", ""))));      
 //			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('+', '-'))));
 //			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('/', '_'))));
-			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace("=", ""))));
+//			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace("=", ""))));
 //			System.out.println(new String(aes.aes256dec(Aes256Test.SECRET_KEY, e.replace('+', '-').replace('/', '_').replace("=", ""))));
 //					.replace('+', '-').replace('/', '_').replace("=", "");
 			} catch (Exception e) {

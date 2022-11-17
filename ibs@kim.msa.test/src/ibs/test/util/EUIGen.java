@@ -180,6 +180,8 @@ public class EUIGen {
 			try {
 				
 				
+				System.out.println(new EUIGen().gen2Serial("BA-K33-220928-001").dtype1);
+				
 				String eui = "f22b4f0106ff0006";
 				System.out.println(eui);
 				EUIGen gen = new EUIGen().gen2EUI(eui);

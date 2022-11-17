@@ -1,5 +1,6 @@
 package ibs.test.device;
 
+import ibs.test.device.com.LORA;
 import xery.mecury.Result;
 
 public class DevcieScheduler {
@@ -11,7 +12,7 @@ public class DevcieScheduler {
 		
 		Result rs = new Result();
 		for (int index=0; index < rs.RESULT_CNT; index++) {
-			IDevice device = new LDevcie();
+			IDevice device = new LORA();
 			DeviceGroup.put(rs.getStr("serial_no", index), device);
 		}
 		
